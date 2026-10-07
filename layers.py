@@ -42,4 +42,14 @@ class Dense:
         return self.Z
     
     
-    # !----- backward to be implemented
+    def backward(self, grad):
+        # 1. Backprop through activation if present
+        if self.activation is not None:
+            grad = self.activation.backward(grad)
+        
+        # 2. Compute gradients for parameters
+        self.dW = np.dot(self.X.T, grad)
+        self.db = np.sum(grad, axis=0, keepdims=True)
+        
+        # 3. Return gradient with respect to inputs to pass to previous layer
+        return np.dot(grad, self.W.T)

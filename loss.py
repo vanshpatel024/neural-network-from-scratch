@@ -14,3 +14,6 @@ class BinaryCrossEntropy:
         return avg_loss
     
     # !----- backward to be implemented
+    
+    def backward(self, y_pred, y_true):
+        return (y_pred - y_true) / y_true.shape[0]
