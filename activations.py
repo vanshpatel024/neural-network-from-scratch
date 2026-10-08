@@ -14,7 +14,8 @@ class ReLU:
         self.a = np.maximum(0, z)
         return self.a
     
-    # !----- backward to be implemented
+    def backward(self, dA):
+        return dA * (self.z > 0)
   
 
 class Sigmoid:
@@ -24,4 +25,5 @@ class Sigmoid:
         self.a = 1 / (1 + np.exp(-z))
         return self.a
     
-    # !----- backward to be implemented
+    def backward(self, dA):
+        return dA * (self.a * (1 - self.a))
