@@ -1,5 +1,9 @@
-documentation
 dataset
 __pycache__
 test/
 model_weights.json
+node_modules
+dist
+.DS_Store
+documentation/
+Future Implementations/
