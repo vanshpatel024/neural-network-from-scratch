@@ -25,9 +25,9 @@ export function Button({
   };
 
   const sizes: Record<'sm' | 'md' | 'lg', string> = {
-    sm: 'text-xs px-2.5 py-1.5',
-    md: 'text-sm px-3.5 py-2',
-    lg: 'text-base px-4 py-2.5',
+    sm: 'text-caption px-2.5 py-1.5',
+    md: 'text-body px-3.5 py-2',
+    lg: 'text-lead px-4 py-2.5',
   };
 
   return (

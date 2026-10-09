@@ -13,26 +13,10 @@ import {
 } from 'lucide-react';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import type { SectionItem } from './types';
+import { IntroductionSection } from './IntroductionSection';
 
 export type { SectionItem, SectionGroup } from './types';
-
-// Section placeholder components
-export function IntroductionSection(): JSX.Element {
-  return (
-    <SectionWrapper
-      id="introduction"
-      title="Introduction"
-      eyebrow="Foundations"
-    >
-      <p>
-        Welcome to Neural Network From Scratch. This interactive textbook guides you
-        through constructing and training a multi-layer perceptron from first principles
-        without third-party deep learning libraries. You will explore every equation,
-        matrix dimension, and numerical step through live visual models.
-      </p>
-    </SectionWrapper>
-  );
-}
+export { IntroductionSection };
 
 export function NeuronSection(): JSX.Element {
   return (
@@ -42,10 +26,9 @@ export function NeuronSection(): JSX.Element {
       eyebrow="Foundations"
     >
       <p>
-        The biological neuron takes input signals, weighs them by synaptic strength,
-        accumulates the net excitation, and fires an output when reaching a threshold.
-        Here we define the artificial counterpart: a dot product of inputs and weights,
-        an added bias, and a non-linear activation.
+        A biological neuron collects signals from other cells and fires when the total signal is high enough.
+        An artificial neuron does the same thing with simple math.
+        You multiply each input by a weight, add a bias, and pass the sum through an activation function.
       </p>
     </SectionWrapper>
   );
@@ -59,9 +42,9 @@ export function ActivationFunctionsSection(): JSX.Element {
       eyebrow="Foundations"
     >
       <p>
-        Non-linear activations grant deep networks the capacity to approximate complex
-        functions. We examine standard activation functions including Sigmoid and ReLU,
-        their analytical derivatives, and the vanishing gradient problem.
+        An activation function bends the signal so a network can learn complex patterns.
+        Without it, even deep networks can only draw straight lines.
+        Here, you will explore Sigmoid and ReLU, see how they change the output, and learn why vanishing gradients happen.
       </p>
     </SectionWrapper>
   );
@@ -75,9 +58,9 @@ export function ForwardPropagationSection(): JSX.Element {
       eyebrow="Foundations"
     >
       <p>
-        Forward propagation passes input feature vectors through successive affine
-        transformations and activations to generate output predictions. We trace the
-        matrix arithmetic and tensor shapes from input dimensions through hidden layers.
+        Forward propagation moves your data from the inputs to the final prediction.
+        In each layer, you multiply inputs by weights, add a bias, and apply an activation function.
+        You will trace matrix shapes step by step as data flows through the network.
       </p>
     </SectionWrapper>
   );
@@ -91,9 +74,9 @@ export function LossFunctionsSection(): JSX.Element {
       eyebrow="Learning"
     >
       <p>
-        The loss function quantifies discrepancy between predictions and ground-truth
-        targets. We derive Binary Cross-Entropy loss from maximum likelihood estimation
-        and inspect numerical stability considerations such as epsilon clipping.
+        A loss function tells you how wrong your model is.
+        It produces a single number that drops as predictions improve.
+        Here, you will learn Binary Cross-Entropy loss for yes-or-no tasks and see how small values keep the math stable.
       </p>
     </SectionWrapper>
   );
@@ -107,9 +90,9 @@ export function GradientDescentSection(): JSX.Element {
       eyebrow="Learning"
     >
       <p>
-        Optimization navigates high-dimensional loss landscapes in the opposite direction
-        of the loss gradient. We inspect the effect of learning rates, step dynamics,
-        and convergence behavior on convex and non-convex surfaces.
+        Gradient descent adjusts weights to lower the loss.
+        Think of it as walking down a foggy hill by feeling the slope under your feet.
+        You will see how the learning rate controls your step size and helps you reach the lowest point.
       </p>
     </SectionWrapper>
   );
@@ -123,9 +106,9 @@ export function BackpropagationSection(): JSX.Element {
       eyebrow="Learning"
     >
       <p>
-        Backpropagation applies the multivariate chain rule in reverse topological order,
-        computing analytical gradients of the loss with respect to all parameters. We
-        examine the precise transpose rules and dimension identities.
+        Backpropagation calculates how much each weight contributed to the total loss.
+        It uses the chain rule from calculus, working backward from the output layer to the input.
+        You will learn the exact matrix steps to compute these gradients.
       </p>
     </SectionWrapper>
   );
@@ -139,9 +122,9 @@ export function WeightInitializationSection(): JSX.Element {
       eyebrow="Training"
     >
       <p>
-        Proper parameter initialization breaks symmetry and preserves signal variance
-        across deep architectures. We compare Zero, Random Normal, and He (Kaiming)
-        initialization schemes.
+        Good starting weights help a network learn quickly.
+        If weights start too large or too small, signals fade or blow up before learning begins.
+        You will compare zero initialization, random values, and He initialization.
       </p>
     </SectionWrapper>
   );
@@ -155,9 +138,9 @@ export function MiniBatchSgdSection(): JSX.Element {
       eyebrow="Training"
     >
       <p>
-        Mini-batch stochastic gradient descent balances computational throughput and
-        gradient variance by updating weights over randomized subsets of the training set.
-        We review epoch schedules, batch slicing, and convergence stability.
+        Mini-batch stochastic gradient descent updates weights using a small group of samples at each step.
+        This approach trains faster than testing one sample at a time or the entire dataset at once.
+        You will explore batch size, epochs, and training speed.
       </p>
     </SectionWrapper>
   );
@@ -171,9 +154,9 @@ export function GradientCheckingSection(): JSX.Element {
       eyebrow="Training"
     >
       <p>
-        Gradient checking verifies analytical backpropagation implementations against
-        two-sided numerical finite differences. We establish the tolerance threshold and
-        relative difference formula to guarantee correctness.
+        Gradient checking verifies that your backpropagation code is correct.
+        It compares your exact formulas with simple slope estimates calculated by nudging each weight.
+        If both answers match closely, your code works as expected.
       </p>
     </SectionWrapper>
   );
@@ -187,9 +170,8 @@ export function TrainModelSection(): JSX.Element {
       eyebrow="Playground"
     >
       <p>
-        An interactive laboratory environment where you configure architecture hyperparameters,
-        observe live loss curves, evaluate classification decision boundaries, and test
-        predictions directly in the browser runtime.
+        Here, you can build and train a neural network directly in your browser.
+        Pick your layer sizes, set your learning rate, and watch the model find decision boundaries in real time.
       </p>
     </SectionWrapper>
   );

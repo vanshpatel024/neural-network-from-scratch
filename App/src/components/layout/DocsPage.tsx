@@ -25,22 +25,20 @@ export function DocsPage(): JSX.Element {
         onCloseMobile={() => setIsOpenMobile(false)}
       />
 
-      {/* Main scrolling column */}
-      <div className="lg:pl-72">
-        <main className="mx-auto max-w-4xl px-6 py-12 sm:px-10 lg:py-16">
+      <div className="lg:pl-72 w-full min-w-0">
+        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-8 sm:py-12 lg:px-10 lg:py-16 w-full min-w-0">
           {/* Main Document Header */}
           <header className="mb-14 border-b border-border-subtle pb-10">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface px-3 py-1 text-xs font-medium text-accent font-mono">
-              <span>Interactive Deep Learning Architecture</span>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface px-3 py-1 text-label text-accent">
+              <span>Interactive Deep Learning Guide</span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-text-primary sm:text-5xl mb-4">
+            <h1 className="text-h1 text-text-primary mb-4">
               Neural Network From Scratch
             </h1>
-            <p className="max-w-[70ch] text-lg text-text-secondary leading-relaxed">
-              A comprehensive textbook that teaches artificial neural networks from first
-              principles. Explore forward propagation, backpropagation, and stochastic
-              gradient descent with live mathematical visualizations and browser-trained
-              models.
+            <p className="max-w-[70ch] text-lead text-text-secondary leading-relaxed">
+              An interactive guide that teaches neural networks from the ground up.
+              Learn how forward propagation and backpropagation work through clear math,
+              clean code, and live visual tools.
             </p>
           </header>
 
@@ -53,10 +51,10 @@ export function DocsPage(): JSX.Element {
           </div>
 
           {/* Clean Footer */}
-          <footer className="mt-20 border-t border-border-subtle pt-8 pb-16 text-xs text-text-muted">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
-              <p>Neural Network From Scratch · Interactive Textbook Edition</p>
-              <p>Pure Math & Matrix Computations</p>
+          <footer className="mt-20 border-t border-border-subtle pt-8 pb-16 text-caption text-text-muted">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p>Neural Network From Scratch · Interactive Guide</p>
+              <p>Pure Math and Python Code</p>
             </div>
           </footer>
         </main>

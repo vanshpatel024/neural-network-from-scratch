@@ -9,11 +9,13 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "check:language": "node --experimental-strip-types scripts/check-language.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.27.20",
     "framer-motion": "^12.4.7",
     "katex": "^0.16.21",
     "lucide-react": "^0.475.0",

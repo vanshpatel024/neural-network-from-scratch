@@ -25,7 +25,7 @@ export function ProgressBar(): JSX.Element {
       aria-valuenow={Math.round(progress * 100)}
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label="Reading progress"
+      aria-label="Reading progress bar"
     >
       <div
         className="h-full bg-accent transition-[width] duration-75 ease-out"
