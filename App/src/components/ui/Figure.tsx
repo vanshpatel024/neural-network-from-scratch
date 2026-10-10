@@ -19,7 +19,7 @@ export function Figure({
       className={`my-8 rounded-xl border border-border-subtle bg-surface p-4 sm:p-6 @container container-query max-w-full overflow-hidden ${className}`}
     >
       {/* Visualization Canvas / Interactive Slot */}
-      <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-lg border border-border-subtle bg-base/60 p-4 min-h-[160px] w-full max-w-full">
+      <div className="relative flex flex-col items-stretch justify-center overflow-hidden rounded-lg border border-border-subtle bg-base/60 p-4 min-h-[160px] w-full max-w-full">
         {children}
       </div>
 

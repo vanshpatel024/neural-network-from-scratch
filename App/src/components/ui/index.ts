@@ -14,3 +14,4 @@ export * from './SegmentedControl';
 export * from './Tooltip';
 export * from './Term';
 export * from './ControlsGrid';
+export * from './DesktopNoticeModal';

@@ -14,105 +14,23 @@ import {
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import type { SectionItem } from './types';
 import { IntroductionSection } from './IntroductionSection';
+import { NeuronSection } from './NeuronSection';
+import { ActivationFunctionsSection } from './ActivationFunctionsSection';
+import { ForwardPropagationSection } from './ForwardPropagationSection';
+import { LossFunctionsSection } from './LossFunctionsSection';
+import { GradientDescentSection } from './GradientDescentSection';
+import { BackpropagationSection } from './BackpropagationSection';
 
 export type { SectionItem, SectionGroup } from './types';
-export { IntroductionSection };
-
-export function NeuronSection(): JSX.Element {
-  return (
-    <SectionWrapper
-      id="the-neuron"
-      title="The Neuron"
-      eyebrow="Foundations"
-    >
-      <p>
-        A biological neuron collects signals from other cells and fires when the total signal is high enough.
-        An artificial neuron does the same thing with simple math.
-        You multiply each input by a weight, add a bias, and pass the sum through an activation function.
-      </p>
-    </SectionWrapper>
-  );
-}
-
-export function ActivationFunctionsSection(): JSX.Element {
-  return (
-    <SectionWrapper
-      id="activation-functions"
-      title="Activation Functions"
-      eyebrow="Foundations"
-    >
-      <p>
-        An activation function bends the signal so a network can learn complex patterns.
-        Without it, even deep networks can only draw straight lines.
-        Here, you will explore Sigmoid and ReLU, see how they change the output, and learn why vanishing gradients happen.
-      </p>
-    </SectionWrapper>
-  );
-}
-
-export function ForwardPropagationSection(): JSX.Element {
-  return (
-    <SectionWrapper
-      id="forward-propagation"
-      title="Forward Propagation"
-      eyebrow="Foundations"
-    >
-      <p>
-        Forward propagation moves your data from the inputs to the final prediction.
-        In each layer, you multiply inputs by weights, add a bias, and apply an activation function.
-        You will trace matrix shapes step by step as data flows through the network.
-      </p>
-    </SectionWrapper>
-  );
-}
-
-export function LossFunctionsSection(): JSX.Element {
-  return (
-    <SectionWrapper
-      id="loss-functions"
-      title="Loss Functions"
-      eyebrow="Learning"
-    >
-      <p>
-        A loss function tells you how wrong your model is.
-        It produces a single number that drops as predictions improve.
-        Here, you will learn Binary Cross-Entropy loss for yes-or-no tasks and see how small values keep the math stable.
-      </p>
-    </SectionWrapper>
-  );
-}
-
-export function GradientDescentSection(): JSX.Element {
-  return (
-    <SectionWrapper
-      id="gradient-descent"
-      title="Gradient Descent"
-      eyebrow="Learning"
-    >
-      <p>
-        Gradient descent adjusts weights to lower the loss.
-        Think of it as walking down a foggy hill by feeling the slope under your feet.
-        You will see how the learning rate controls your step size and helps you reach the lowest point.
-      </p>
-    </SectionWrapper>
-  );
-}
-
-export function BackpropagationSection(): JSX.Element {
-  return (
-    <SectionWrapper
-      id="backpropagation"
-      title="Backpropagation"
-      eyebrow="Learning"
-    >
-      <p>
-        Backpropagation calculates how much each weight contributed to the total loss.
-        It uses the chain rule from calculus, working backward from the output layer to the input.
-        You will learn the exact matrix steps to compute these gradients.
-      </p>
-    </SectionWrapper>
-  );
-}
+export {
+  IntroductionSection,
+  NeuronSection,
+  ActivationFunctionsSection,
+  ForwardPropagationSection,
+  LossFunctionsSection,
+  GradientDescentSection,
+  BackpropagationSection,
+};
 
 export function WeightInitializationSection(): JSX.Element {
   return (

@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Sidebar } from './Sidebar';
 import { ProgressBar } from './ProgressBar';
+import { ErrorBoundary } from './ErrorBoundary';
 import { useActiveSection } from '@/hooks/useActiveSection';
 import { SECTIONS } from '@/sections';
+import { DesktopNoticeModal } from '@/components/ui';
 
 export function DocsPage(): JSX.Element {
   const [isOpenMobile, setIsOpenMobile] = useState<boolean>(false);
@@ -16,6 +18,7 @@ export function DocsPage(): JSX.Element {
   return (
     <div className="min-h-screen bg-base text-text-primary">
       <ProgressBar />
+      <DesktopNoticeModal />
 
       <Sidebar
         activeId={activeId}
@@ -46,7 +49,11 @@ export function DocsPage(): JSX.Element {
           <div className="divide-y divide-border-subtle">
             {SECTIONS.map((section) => {
               const Component = section.component;
-              return <Component key={section.id} />;
+              return (
+                <ErrorBoundary key={section.id} fallbackTitle={`Could not load ${section.title}`}>
+                  <Component />
+                </ErrorBoundary>
+              );
             })}
           </div>
 

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
+@import "mafs/core.css";
 
 @theme {
   /* Background layers */
@@ -66,6 +67,18 @@
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
+}
+
+/* Mafs Dark Theme Customization */
+.MafsView {
+  --mafs-bg: #121215;
+  --mafs-fg: #a1a1aa;
+  --mafs-origin-color: #3f3f46;
+  --mafs-line-color: #27272a;
+  --grid-line-subdivision-color: rgba(255, 255, 255, 0.03);
+  --mafs-blue: #3b82f6;
+  background-color: #121215 !important;
+  border-radius: 0.5rem;
 }
 
 /* Global root scale to 105% */
@@ -140,17 +153,6 @@ button:focus:not(:focus-visible),
   box-shadow: none !important;
 }
 
-/* Ensure minimum 40px touch targets on coarse pointers */
-@media (pointer: coarse) {
-  button,
-  [role="button"],
-  a,
-  input[type="range"],
-  [role="switch"],
-  [role="radio"] {
-    min-height: 40px;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   *,
