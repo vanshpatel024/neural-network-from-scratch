@@ -6,7 +6,7 @@ import { Figure } from '@/components/ui/Figure';
 import {
   P,
   Lead,
-  Heading,
+  SubHeading,
   InlineCode,
 } from '@/components/ui/prose';
 import { Reveal } from '@/components/ui/Reveal';
@@ -82,7 +82,7 @@ export function LossFunctionsSection(): JSX.Element {
 
       {/* 1. Binary Cross-Entropy Definition */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>1. Binary Cross-Entropy (BCE)</Heading>
+        <SubHeading id="loss-functions--bce">1. Binary Cross-Entropy (BCE)</SubHeading>
         <P>
           For yes-or-no classification, you use <Term id="loss">Binary Cross-Entropy</Term>.
           It measures the distance between the true label and your predicted probability:
@@ -104,7 +104,7 @@ export function LossFunctionsSection(): JSX.Element {
 
       {/* 2. Interactive BCE vs MSE Comparison */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>2. Why Cross-Entropy Beats Mean Squared Error</Heading>
+        <SubHeading id="loss-functions--bce-vs-mse">2. Why Cross-Entropy Beats Mean Squared Error</SubHeading>
         <P>
           Why not use Mean Squared Error for classification?
           Compare both loss functions below across all probabilities:
@@ -135,7 +135,7 @@ export function LossFunctionsSection(): JSX.Element {
 
       {/* 4. Interactive 1D Points Dataset */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>3. Dataset Loss on a 1D Classifier</Heading>
+        <SubHeading id="loss-functions--dataset-loss">3. Dataset Loss on a 1D Classifier</SubHeading>
         <P>
           See how weights and biases shape total loss across a sample dataset.
           Move the sliders below to fit a sigmoid curve to six 1D points:
@@ -169,7 +169,7 @@ export function LossFunctionsSection(): JSX.Element {
 
       {/* 6. Python CodeBlock */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>4. Code Implementation in Python</Heading>
+        <SubHeading id="loss-functions--python-code">4. Code Implementation in Python</SubHeading>
         <P>
           Here is how <InlineCode>loss.py</InlineCode> computes the forward penalty and backward gradient:
         </P>

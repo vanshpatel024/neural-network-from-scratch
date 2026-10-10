@@ -7,7 +7,7 @@ import { Figure } from '@/components/ui/Figure';
 import {
   P,
   Lead,
-  Heading,
+  SubHeading,
   InlineCode,
 } from '@/components/ui/prose';
 import { Reveal } from '@/components/ui/Reveal';
@@ -104,7 +104,7 @@ export function NeuronSection(): JSX.Element {
 
       {/* 1. Biology to Math */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>1. From Biology to Linear Math</Heading>
+        <SubHeading id="the-neuron--biology-to-math">1. From Biology to Linear Math</SubHeading>
         <P>
           Biological neurons collect chemical signals through dendrites.
           When the total charge reaches a threshold, the cell fires an electrical pulse along its axon.
@@ -132,7 +132,7 @@ export function NeuronSection(): JSX.Element {
 
       {/* 2. Interactive Neuron Figure */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>2. Interactive Neuron & Decision Boundary</Heading>
+        <SubHeading id="the-neuron--interactive-neuron">2. Interactive Neuron & Decision Boundary</SubHeading>
         <P>
           In 2D space, the equation <InlineCode>w₁x₁ + w₂x₂ + b = 0</InlineCode> forms a straight line.
           This line divides the plane into two prediction regions:
@@ -173,7 +173,7 @@ export function NeuronSection(): JSX.Element {
 
       {/* 4. CodeBlock */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>3. Neuron Code Implementation</Heading>
+        <SubHeading id="the-neuron--python-code">3. Neuron Code Implementation</SubHeading>
         <P>
           In Python, you compute a neuron in two straightforward lines:
         </P>

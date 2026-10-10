@@ -7,7 +7,7 @@ import { Figure } from '@/components/ui/Figure';
 import {
   P,
   Lead,
-  Heading,
+  SubHeading,
   Subheading,
   Ul,
   Li,
@@ -177,7 +177,7 @@ export function IntroductionSection(): JSX.Element {
       </Reveal>
 
       <Reveal direction="up" delay={0.05}>
-        <Heading>1. Project Goal</Heading>
+        <SubHeading id="introduction--project-goal">1. Project Goal</SubHeading>
         <P>
           Popular libraries like PyTorch make building networks fast, but they hide the math.
           In this guide, you will build every piece yourself using Python and NumPy.
@@ -218,7 +218,7 @@ export function IntroductionSection(): JSX.Element {
       </Reveal>
 
       <Reveal direction="up" delay={0.05}>
-        <Heading>2. Interactive Tools</Heading>
+        <SubHeading id="introduction--interactive-tools">2. Interactive Tools</SubHeading>
         <P>
           Every major topic in this guide includes a live tool.
           You can test your understanding by changing numbers and watching what happens:
@@ -321,7 +321,7 @@ export function IntroductionSection(): JSX.Element {
       </Reveal>
 
       <Reveal direction="up" delay={0.05}>
-        <Heading>3. Linking Code to Math</Heading>
+        <SubHeading id="introduction--code-to-math">3. Linking Code to Math</SubHeading>
         <P>
           Most tutorials keep code and math separate.
           In this guide, each code sample links directly to its formula.
@@ -345,7 +345,7 @@ export function IntroductionSection(): JSX.Element {
       </Reveal>
 
       <Reveal direction="up" delay={0.05}>
-        <Heading>4. Learning Roadmap</Heading>
+        <SubHeading id="introduction--learning-roadmap">4. Learning Roadmap</SubHeading>
         <P>
           The guide has four main parts. Each part builds on the one before it:
         </P>

@@ -7,7 +7,7 @@ import { Figure } from '@/components/ui/Figure';
 import {
   P,
   Lead,
-  Heading,
+  SubHeading,
   InlineCode,
 } from '@/components/ui/prose';
 import { Reveal } from '@/components/ui/Reveal';
@@ -267,7 +267,7 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 1. Intuition */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>1. The Foggy Hill Analogy</Heading>
+        <SubHeading id="gradient-descent--foggy-hill">1. The Foggy Hill Analogy</SubHeading>
         <P>
           Imagine you are standing on a steep hillside in thick fog.
           You cannot see the bottom of the valley.
@@ -283,7 +283,7 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 2. Definition & Update Rule */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>2. The Parameter Update Rule</Heading>
+        <SubHeading id="gradient-descent--update-rule">2. The Parameter Update Rule</SubHeading>
         <P>
           In a neural network, the ground height represents your <Term id="loss">loss</Term>.
           Your horizontal position represents your <Term id="weights">weights</Term>.
@@ -314,7 +314,7 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 3. Code Implementation Mapping */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>3. Math to Python Implementation</Heading>
+        <SubHeading id="gradient-descent--python-code">3. Math to Python Implementation</SubHeading>
         <P>
           This update rule translates directly into Python inside our optimizer.
           Click any line below to see its exact formula:
@@ -330,7 +330,7 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 4. Figure A: 1D Interactive Descent */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>4. Interactive 1D Descent</Heading>
+        <SubHeading id="gradient-descent--interactive-1d">4. Interactive 1D Descent</SubHeading>
         <P>
           Test how a parameter rolls down a loss curve.
           Drag the starting point anywhere on the curve, set your learning rate, and press Play:
@@ -474,7 +474,7 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 5. Learning Rate Lab */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>5. Learning Rate Lab</Heading>
+        <SubHeading id="gradient-descent--learning-rate-lab">5. Learning Rate Lab</SubHeading>
         <P>
           The learning rate <MathEquation math="\alpha" /> is the most important hyperparameter in training.
           Choose a preset below to see how step size shapes convergence:
@@ -542,10 +542,10 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 6. Figure B: Loss Chart Over Iterations */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>6. Loss History Over Steps</Heading>
+        <SubHeading id="gradient-descent--loss-history">6. Loss History Over Steps</SubHeading>
         <P>
           Every gradient descent run produces a loss curve.
-          This chart records the value of <MathEquation math="f(w)" /> at every iteration from Figure A:
+          This chart records the value of <MathEquation math="f(w)" /> at every iteration:
         </P>
 
         <Figure caption="Live Loss Curve: Track how prediction error falls or spikes over successive iterations.">
@@ -555,7 +555,7 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 7. Figure C: 2D Contour Descent & Momentum */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>7. 2D Descent in an Elongated Valley</Heading>
+        <SubHeading id="gradient-descent--2d-contour">7. 2D Descent in an Elongated Valley</SubHeading>
         <P>
           Real neural networks optimize millions of weights at the same time.
           In higher dimensions, loss valleys are rarely symmetrical circles.
@@ -588,7 +588,7 @@ export function GradientDescentSection(): JSX.Element {
 
       {/* 8. Local Minima and Saddle Points */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>8. Local Minima and Saddle Points</Heading>
+        <SubHeading id="gradient-descent--minima-saddles">8. Local Minima and Saddle Points</SubHeading>
         <P>
           Convex bowls are friendly because every downhill path leads to the same global bottom.
           Deep neural networks, however, form complex non-convex loss surfaces.

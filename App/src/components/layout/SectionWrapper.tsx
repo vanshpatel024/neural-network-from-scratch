@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { navigateTo } from '@/lib/navigation';
 
 export interface SectionWrapperProps {
   id: string;
@@ -16,7 +17,7 @@ export function SectionWrapper({
   return (
     <section
       id={id}
-      className="scroll-mt-24 border-b border-border-subtle py-16 first:pt-8 last:border-b-0"
+      className="scroll-mt-24 border-b border-border-subtle py-16 first:pt-8 last:border-b-0 focus:outline-none"
     >
       <div className="w-full min-w-0">
         {eyebrow && (
@@ -27,6 +28,10 @@ export function SectionWrapper({
         <h2 className="text-h2 text-text-primary mb-6">
           <a
             href={`#${id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              navigateTo(id, { source: 'section-heading' });
+            }}
             className="group inline-flex items-center gap-2 hover:text-accent transition-colors"
           >
             <span>{title}</span>

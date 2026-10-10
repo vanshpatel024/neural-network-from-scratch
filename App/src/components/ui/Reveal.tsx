@@ -24,6 +24,7 @@ export function Reveal({
 
   return (
     <motion.div
+      data-reveal="true"
       initial={{ opacity: 0, y: yOffset }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}

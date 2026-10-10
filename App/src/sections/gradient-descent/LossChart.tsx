@@ -7,6 +7,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
+import { navigateTo } from '@/lib/navigation';
 
 export interface LossPoint {
   step: number;
@@ -41,8 +42,21 @@ export function LossChart({ data }: LossChartProps): JSX.Element {
 
       <div className="h-52 w-full">
         {chartData.length <= 1 ? (
-          <div className="flex h-full items-center justify-center text-caption text-text-muted">
-            Press Play or Step to watch the loss drop per iteration.
+          <div className="flex h-full items-center justify-center text-center text-caption text-text-muted px-4">
+            <p>
+              Play the{' '}
+              <a
+                href="#gradient-descent--interactive-1d"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateTo('gradient-descent--interactive-1d');
+                }}
+                className="font-medium text-accent underline hover:text-accent-light cursor-pointer"
+              >
+                1D Gradient Descent graph
+              </a>{' '}
+              above to generate this curve.
+            </p>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">

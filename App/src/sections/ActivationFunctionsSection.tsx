@@ -7,7 +7,7 @@ import { Figure } from '@/components/ui/Figure';
 import {
   P,
   Lead,
-  Heading,
+  SubHeading,
   InlineCode,
 } from '@/components/ui/prose';
 import { Reveal } from '@/components/ui/Reveal';
@@ -103,7 +103,7 @@ export function ActivationFunctionsSection(): JSX.Element {
 
       {/* 1. Why Non-Linearity Matters */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>1. Why Networks Need Non-Linearity</Heading>
+        <SubHeading id="activation-functions--why-non-linear">1. Why Networks Need Non-Linearity</SubHeading>
         <P>
           In linear algebra, multiplying matrices repeatedly just makes another single matrix.
           If you stack ten linear layers together without curves, the entire network collapses:
@@ -124,7 +124,7 @@ export function ActivationFunctionsSection(): JSX.Element {
 
       {/* 2. Interactive Activation Plot */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>2. Interactive Curves & Derivatives</Heading>
+        <SubHeading id="activation-functions--interactive-curves">2. Interactive Curves & Derivatives</SubHeading>
         <P>
           Pick an activation below to see its function curve and slope plotted together.
           Drag the blue input handle along the curve to inspect slopes in real time:
@@ -162,7 +162,7 @@ export function ActivationFunctionsSection(): JSX.Element {
 
       {/* 4. CodeBlock */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>3. Code Implementation in Python</Heading>
+        <SubHeading id="activation-functions--python-code">3. Code Implementation in Python</SubHeading>
         <P>
           Here is how <InlineCode>activations.py</InlineCode> implements both the forward activation
           and backward derivative:

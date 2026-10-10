@@ -7,7 +7,7 @@ import { Figure } from '@/components/ui/Figure';
 import {
   P,
   Lead,
-  Heading,
+  SubHeading,
   Subheading,
   InlineCode,
 } from '@/components/ui/prose';
@@ -124,7 +124,7 @@ export function BackpropagationSection(): JSX.Element {
 
       {/* 1. The Chain Rule on a Classification Neuron */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>1. The Chain Rule on a Classification Neuron</Heading>
+        <SubHeading id="backpropagation--chain-rule">1. The Chain Rule on a Classification Neuron</SubHeading>
         <P>
           Look at a neuron classifying digits 0 and 1.
           It takes input pixel <MathEquation math="x" />, multiplies by weight <MathEquation math="w" />, and adds bias <MathEquation math="b" />:
@@ -164,7 +164,7 @@ export function BackpropagationSection(): JSX.Element {
 
       {/* 2. From Image Pixels to Network Inputs */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>2. From Image Pixels to Network Inputs</Heading>
+        <SubHeading id="backpropagation--pixels-to-inputs">2. From Image Pixels to Network Inputs</SubHeading>
         <P>
           Computers do not see pictures like human eyes do. They only see numbers.
           A grayscale image is a grid of numbers from 0.0 (pure black) to 1.0 (pure white).
@@ -255,7 +255,7 @@ export function BackpropagationSection(): JSX.Element {
 
       {/* 3. Interactive Digit Classification Computation Graph */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>3. Interactive Computation Graph</Heading>
+        <SubHeading id="backpropagation--computation-graph">3. Interactive Computation Graph</SubHeading>
         <P>
           Step through forward and backward passes on this digit classifier.
           Watch error flow backward to calculate weight and bias gradients:
@@ -285,7 +285,7 @@ export function BackpropagationSection(): JSX.Element {
 
       {/* 4. The Layer Equations */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>4. Layer Gradients in Matrix Form</Heading>
+        <SubHeading id="backpropagation--matrix-gradients">4. Layer Gradients in Matrix Form</SubHeading>
         <P>
           In a neural network layer, the forward step is <InlineCode>Z = X · W + b</InlineCode>.
           When the layer receives incoming error signal <MathEquation math="dZ" />, calculus gives three formulas:
@@ -312,7 +312,7 @@ export function BackpropagationSection(): JSX.Element {
 
       {/* 5. Interactive 2-3-1 Network Backpropagation */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>5. Backpropagation Through a 2-3-1 Network</Heading>
+        <SubHeading id="backpropagation--network-pass">5. Backpropagation Through a 2-3-1 Network</SubHeading>
         <P>
           Now step backward through the two-layer network you explored earlier.
           Edges highlight the gradient on each weight:
@@ -343,7 +343,7 @@ export function BackpropagationSection(): JSX.Element {
 
       {/* 7. Python CodeBlock */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>6. Code Implementation in Python</Heading>
+        <SubHeading id="backpropagation--python-code">6. Code Implementation in Python</SubHeading>
         <P>
           Here is how <InlineCode>layers.py</InlineCode> implements the backward pass for a dense layer:
         </P>

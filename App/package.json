@@ -12,6 +12,7 @@
     "check:language": "node --experimental-strip-types scripts/check-language.ts",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "node --experimental-strip-types scripts/test-navigation.e2e.ts",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -37,6 +38,7 @@
     "eslint": "^9.20.1",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "playwright": "^1.64.0",
     "prettier": "^3.5.1",
     "tailwindcss": "^4.0.6",
     "typescript": "^5.7.3",

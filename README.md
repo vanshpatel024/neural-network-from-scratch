@@ -1,29 +1,32 @@
 # Neural Network From Scratch
 
-This is a small learning project where I am building a neural network from scratch using Python and NumPy.
+A deep learning project implementing neural networks from first principles using pure Python and NumPy, paired with a web visualizer and textbook.
 
-The goal is not to use a machine learning framework like TensorFlow or PyTorch. Instead, I want to understand what happens inside a neural network by implementing the basic pieces myself.
+The goal is not to use a high-level framework like TensorFlow or PyTorch. Instead, every component—from matrix transformations and scalar computational graphs to backpropagation and mini-batch SGD—is built from scratch.
 
-## What This Project Includes
+---
 
-- Dense layers with forward and backward passes
-- Activation functions like ReLU and Sigmoid
-- Loss functions like Mean Squared Error and Binary Cross-Entropy
-- Optimizers like SGD and Adam
-- Backpropagation and training loops
-- An interactive web visualizer to explore the math and concepts visually
+## 📚 What This Project Includes
 
-## Why I Am Doing This
+- **Core Python Engine**:
+  - Dense layers with full forward and backward passes
+  - Activation functions: Sigmoid, tanh, ReLU, and Leaky ReLU with exact analytical derivatives
+  - Loss functions: Mean Squared Error (MSE) and Binary Cross-Entropy (BCE)
+  - Optimizers: Mini-batch Stochastic Gradient Descent (SGD) and Momentum
+  - Centered finite difference gradient checking utility
+  - End-to-end training loops and synthetic dataset generators (Moons, Circles, XOR, Spirals)
+- **Interactive Visual Textbook & Web Playground (`App/`)**:
+  - 10 comprehensive visual chapters spanning Foundations, Learning, Training, and Live Playground
+  - Multi-threaded Web Worker training engine running at 60 FPS
+  - Live 2D decision boundary canvas with interactive point additions
+  - Real-time neuron feature maps showing what each hidden unit learns
+  - Interactive activation distribution histograms across deep networks
 
-I am doing this project for learning purposes. Neural networks can feel like a black box when using high-level libraries, so I wanted to build one step by step and understand the math and code behind it.
+---
 
-This project helps me learn how data flows through a network, how layers are connected, how activations work, and how backpropagation and optimization update the model.
+## 🚀 Running the Interactive Visualizer
 
-## Interactive Visualizer
-
-There is also an interactive web app in the `App` folder that explains each concept with live diagrams, formula walkthroughs, and step-by-step computation graphs.
-
-To run the visualizer:
+The interactive guide lives in the `App/` directory:
 
 ```bash
 cd App
@@ -31,6 +34,26 @@ npm install
 npm run dev
 ```
 
-## Current Status
+Open `http://localhost:5173` to explore the interactive visual textbook.
 
-The core pieces (forward propagation, loss functions, gradient descent, and backpropagation) are implemented and tested, along with interactive visual walkthroughs for each topic.
+For full architecture details, deployment options (Vercel & GitHub Pages), and developer scripts, see the [App Documentation](App/README.md).
+
+---
+
+## 🧪 Running the Quality Gates
+
+Inside the `App/` directory:
+
+```bash
+npm test              # Run unit tests (Vitest)
+npm run typecheck     # Type-check TypeScript (tsc --noEmit)
+npm run lint          # Run ESLint
+npm run check:language# Audit reading grade level (Grade <= 8.0)
+npm run build         # Build production bundle
+```
+
+---
+
+## 📄 License
+
+MIT License. Free for learning, teaching, and experimentation.

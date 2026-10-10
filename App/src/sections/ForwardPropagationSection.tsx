@@ -6,7 +6,7 @@ import { Figure } from '@/components/ui/Figure';
 import {
   P,
   Lead,
-  Heading,
+  SubHeading,
   InlineCode,
 } from '@/components/ui/prose';
 import { Reveal } from '@/components/ui/Reveal';
@@ -114,7 +114,7 @@ export function ForwardPropagationSection(): JSX.Element {
 
       {/* 1. Mathematical Chaining */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>1. The Forward Math Pipeline</Heading>
+        <SubHeading id="forward-propagation--pipeline">1. The Forward Math Pipeline</SubHeading>
         <P>
           In a neural network, layers form an assembly line.
           The output of one layer becomes the input for the next layer.
@@ -138,7 +138,7 @@ export function ForwardPropagationSection(): JSX.Element {
 
       {/* 2. Interactive Network Figure */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>2. Interactive 2-3-1 Network</Heading>
+        <SubHeading id="forward-propagation--interactive-network">2. Interactive 2-3-1 Network</SubHeading>
         <P>
           Step through a complete forward pass in the small network below.
           You can edit the inputs, inspect the live matrix equations, and watch signals move along edges:
@@ -160,7 +160,7 @@ export function ForwardPropagationSection(): JSX.Element {
 
       {/* 3. Shape Matching & Invariants */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>3. Tracking Matrix Shapes</Heading>
+        <SubHeading id="forward-propagation--matrix-shapes">3. Tracking Matrix Shapes</SubHeading>
         <P>
           In neural networks, matrix shapes must match exactly at every step.
           When you multiply two matrices, the inner dimensions must match:
@@ -203,7 +203,7 @@ export function ForwardPropagationSection(): JSX.Element {
 
       {/* 5. CodeBlock */}
       <Reveal direction="up" delay={0.05}>
-        <Heading>4. Python Implementation</Heading>
+        <SubHeading id="forward-propagation--python-code">4. Python Implementation</SubHeading>
         <P>
           Here is how the <InlineCode>Dense</InlineCode> layer and <InlineCode>Sequential</InlineCode> model
           implement forward propagation in our project code:

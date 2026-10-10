@@ -48,6 +48,27 @@ export function Heading({
   );
 }
 
+export function SubHeading({
+  id,
+  children,
+  className = '',
+}: {
+  id: string;
+  children: ReactNode;
+  className?: string;
+}): JSX.Element {
+  return (
+    <h3
+      id={id}
+      tabIndex={-1}
+      data-subsection-heading="true"
+      className={`text-h3 text-text-primary mt-8 mb-3 scroll-mt-24 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm ${className}`}
+    >
+      {children}
+    </h3>
+  );
+}
+
 export function Subheading({
   children,
   className = '',

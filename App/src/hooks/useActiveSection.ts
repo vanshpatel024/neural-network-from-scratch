@@ -1,139 +1,217 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useCallback } from 'react';
+import type { SectionItem } from '@/sections/types';
+import { useNavigationStore, navigateTo } from '@/lib/navigation';
 
 export interface UseActiveSectionOptions {
-  sectionIds: readonly string[];
+  sections: readonly SectionItem[];
   offset?: number;
+  subsectionOffset?: number;
 }
 
 export interface UseActiveSectionReturn {
   activeId: string;
+  activeSubsectionId: string | null;
   setActiveId: (id: string) => void;
+  setActiveSubsectionId: (id: string | null) => void;
   scrollToSection: (id: string) => void;
+  scrollToSubsection: (id: string) => void;
+  scrollToTop: () => void;
 }
 
 export function useActiveSection({
-  sectionIds,
+  sections,
+  offset = 140,
+  subsectionOffset = 96,
 }: UseActiveSectionOptions): UseActiveSectionReturn {
-  const [activeId, setActiveId] = useState<string>(() => {
-    if (typeof window !== 'undefined' && window.location.hash) {
-      const hashId = window.location.hash.replace('#', '');
-      if (sectionIds.includes(hashId)) {
-        return hashId;
-      }
-    }
-    return sectionIds[0] ?? '';
-  });
+  const activeId = useNavigationStore((s) => s.activeId);
+  const activeSubsectionId = useNavigationStore((s) => s.activeSubsectionId);
+  const setActiveId = useNavigationStore((s) => s.setActiveId);
+  const setActiveSubsectionId = useNavigationStore((s) => s.setActiveSubsectionId);
 
-  const isManualScrollRef = useRef<boolean>(false);
-  const manualScrollTimerRef = useRef<number | null>(null);
-
-  const scrollToSection = useCallback((id: string): void => {
-    const element = document.getElementById(id);
-    if (!element) {
-      return;
-    }
-
-    isManualScrollRef.current = true;
-    if (manualScrollTimerRef.current !== null) {
-      window.clearTimeout(manualScrollTimerRef.current);
-    }
-
-    setActiveId(id);
-    window.history.replaceState(null, '', `#${id}`);
-
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-
-    manualScrollTimerRef.current = window.setTimeout(() => {
-      isManualScrollRef.current = false;
-    }, 800);
+  const scrollToTop = useCallback((): void => {
+    navigateTo('top', { source: 'scrollToTop' });
   }, []);
 
-  // Honor initial hash on load
+  const scrollToSection = useCallback((id: string): void => {
+    navigateTo(id, { source: 'scrollToSection' });
+  }, []);
+
+  const scrollToSubsection = useCallback((subsectionId: string): void => {
+    navigateTo(subsectionId, { source: 'scrollToSubsection' });
+  }, []);
+
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined') return;
+
+    const initialHash = window.location.hash.replace('#', '');
+    if (!initialHash) return;
+
+    const handleInitialHash = () => {
+      navigateTo(initialHash, { source: 'initial-hash', behavior: 'auto' });
+    };
+
+    const fontPromise =
+      document.fonts && document.fonts.ready
+        ? Promise.race([
+            document.fonts.ready,
+            new Promise((r) => setTimeout(r, 200)),
+          ])
+        : Promise.resolve();
+
+    fontPromise.then(() => {
+      requestAnimationFrame(() => {
+        handleInitialHash();
+      });
+    });
+  }, []);
+
+  // Two-level scroll-spy with IntersectionObserver over sections and subsections
+  useEffect(() => {
+    if (typeof window === 'undefined' || sections.length === 0) {
       return;
     }
 
-    const hash = window.location.hash.replace('#', '');
-    if (hash && sectionIds.includes(hash)) {
-      const element = document.getElementById(hash);
-      if (element) {
-        // slight delay to allow layout to settle
-        const timer = window.setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-        return () => window.clearTimeout(timer);
+    let rafId: number | null = null;
+
+    const computeActive = (): void => {
+      // While locked, scroll-spy must NOT change active section or subsection
+      if (useNavigationStore.getState().isNavigating) {
+        return;
       }
-    }
-  }, [sectionIds]);
 
-  // Scroll-spy with IntersectionObserver
-  useEffect(() => {
-    if (typeof window === 'undefined' || sectionIds.length === 0) {
-      return;
-    }
+      // 1. Bottom of page check
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      if (scrollY + windowHeight >= documentHeight - 60) {
+        const lastSection = sections[sections.length - 1];
+        if (lastSection) {
+          const lastId = lastSection.id;
+          const lastSubId =
+            lastSection.subsections.length > 0
+              ? lastSection.subsections[lastSection.subsections.length - 1]?.id ?? null
+              : null;
 
-    const visibleMap = new Map<string, number>();
+          useNavigationStore.setState({
+            activeId: lastId,
+            activeSubsectionId: lastSubId,
+          });
+          window.history.replaceState(null, '', `#${lastSubId ?? lastId}`);
+        }
+        return;
+      }
+
+      // 2. Top of page check
+      if (scrollY < 120) {
+        const firstSection = sections[0];
+        const firstId = firstSection?.id ?? 'introduction';
+        useNavigationStore.setState({
+          activeId: firstId,
+          activeSubsectionId: null,
+        });
+        if (window.location.hash) {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+        return;
+      }
+
+      // 3. Middle of page: find active section
+      let matchedSection = sections[0];
+      for (const section of sections) {
+        const el = document.getElementById(section.id);
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= offset + 24) {
+          matchedSection = section;
+        } else {
+          break;
+        }
+      }
+
+      const nextSectionId = matchedSection?.id ?? '';
+
+      // 4. Find active subsection within matchedSection
+      let matchedSubId: string | null = null;
+      if (matchedSection && matchedSection.subsections.length > 0) {
+        for (const sub of matchedSection.subsections) {
+          const el = document.getElementById(sub.id);
+          if (!el) continue;
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= subsectionOffset + 24) {
+            matchedSubId = sub.id;
+          } else {
+            break;
+          }
+        }
+      }
+
+      useNavigationStore.setState({
+        activeId: nextSectionId,
+        activeSubsectionId: matchedSubId,
+      });
+      window.history.replaceState(null, '', `#${matchedSubId ?? nextSectionId}`);
+    };
+
+    const handleScrollOrIntersect = (): void => {
+      if (useNavigationStore.getState().isNavigating) {
+        return;
+      }
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(() => {
+        computeActive();
+        rafId = null;
+      });
+    };
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (isManualScrollRef.current) {
-          return;
-        }
-
-        for (const entry of entries) {
-          const id = entry.target.id;
-          if (entry.isIntersecting) {
-            visibleMap.set(id, entry.intersectionRatio);
-          } else {
-            visibleMap.delete(id);
-          }
-        }
-
-        if (visibleMap.size > 0) {
-          // Pick the first section from sectionIds that is visible, or highest ratio
-          for (const id of sectionIds) {
-            if (visibleMap.has(id)) {
-              setActiveId((prev) => {
-                if (prev !== id) {
-                  window.history.replaceState(null, '', `#${id}`);
-                  return id;
-                }
-                return prev;
-              });
-              break;
-            }
-          }
-        }
+      () => {
+        handleScrollOrIntersect();
       },
       {
         root: null,
-        rootMargin: '-20% 0px -60% 0px',
-        threshold: [0, 0.25, 0.5, 0.75, 1.0],
+        rootMargin: `-${subsectionOffset}px 0px -50% 0px`,
+        threshold: [0, 1.0],
       }
     );
 
-    for (const id of sectionIds) {
-      const el = document.getElementById(id);
-      if (el) {
-        observer.observe(el);
+    for (const section of sections) {
+      const sectionEl = document.getElementById(section.id);
+      if (sectionEl) {
+        observer.observe(sectionEl);
+      }
+      for (const sub of section.subsections) {
+        const subEl = document.getElementById(sub.id);
+        if (subEl) {
+          observer.observe(subEl);
+        }
       }
     }
 
+    window.addEventListener('scroll', handleScrollOrIntersect, { passive: true });
+    window.addEventListener('resize', handleScrollOrIntersect, { passive: true });
+
+    // Initial pass
+    computeActive();
+
     return () => {
       observer.disconnect();
-      if (manualScrollTimerRef.current !== null) {
-        window.clearTimeout(manualScrollTimerRef.current);
+      window.removeEventListener('scroll', handleScrollOrIntersect);
+      window.removeEventListener('resize', handleScrollOrIntersect);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
       }
     };
-  }, [sectionIds]);
+  }, [sections, offset, subsectionOffset]);
 
   return {
     activeId,
+    activeSubsectionId,
     setActiveId,
+    setActiveSubsectionId,
     scrollToSection,
+    scrollToSubsection,
+    scrollToTop,
   };
 }
