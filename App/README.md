@@ -110,38 +110,6 @@ App/
 
 ---
 
-## How to Add a New Section
-
-To add a new chapter or topic to the guide:
-
-1. **Create the section component**:
-   - Create `src/sections/YourTopicSection.tsx` wrapped in `<SectionWrapper id="your-topic" title="Your Topic">`.
-   - For numbered headings inside the section, use `<SubHeading id="your-topic--slug">1. Heading Title</SubHeading>`.
-   - `<SubHeading>` automatically handles `scroll-mt-24`, `tabIndex={-1}`, and DOM subsection registration.
-
-2. **Register in `src/sections/index.tsx`**:
-   - Add the section definition to the `SECTIONS` registry:
-   ```ts
-   {
-     id: 'your-topic',
-     title: 'Your Topic',
-     group: 'Training',
-     icon: Cpu,
-     component: YourTopicSection,
-     subsections: [
-       { id: 'your-topic--slug', title: '1. Heading Title' },
-     ],
-   }
-   ```
-   - **Naming Rule**: Subsection IDs must be namespaced as `<section-id>--<slug>` (e.g. `gradient-descent--learning-rate-lab`).
-   - **Titles**: Keep titles short ($\le 28$ characters) in clear, plain language.
-   - Use `subsections: []` for sections without internal headings.
-
-3. **Dev Validation**:
-   - During `npm run dev`, the app automatically verifies that all registered subsection IDs exist in the DOM and warns if any IDs are missing or duplicated.
-
----
-
 ## How to Get the Most Out of This Guide
 
 1. **Follow the "Try this" prompts**: Every interactive figure has guided experiment challenges showing edge cases.
@@ -150,23 +118,3 @@ To add a new chapter or topic to the guide:
    - In **Weight Initialization**, see how small weights cause signals to vanish by Layer 4.
    - In **Gradient Checking**, click "Inject Backprop Bug" to verify how finite differences catch subtle math bugs.
    - In the **Playground**, load *Bad initialization* to see why identical zero weights freeze learning.
-
----
-
-## Deployment
-
-### Deploying to Vercel (Default)
-The project includes `vercel.json` with single-page app rewrites. To deploy:
-1. Import the repository in [Vercel](https://vercel.com).
-2. Set the **Root Directory** to `App`.
-3. Build command: `npm run build`
-4. Output directory: `dist`
-5. Click **Deploy**.
-
-### Deploying to GitHub Pages
-To deploy to GitHub Pages under a repository subpath (e.g. `https://<user>.github.io/<repo>/`):
-1. In `vite.config.ts`, the base path reads from `VITE_BASE_PATH`:
-   ```bash
-   VITE_BASE_PATH=/neural-network-from-scratch/ npm run build
-   ```
-2. Deploy the generated `dist/` directory to the `gh-pages` branch using GitHub Actions.
