@@ -4,7 +4,7 @@ An interactive, visual textbook that teaches deep learning from first principles
 
 ---
 
-## 🌟 What This Interactive Guide Includes
+## What This Interactive Guide Includes
 
 1. **Foundations**:
    - **The Neuron**: Biological inspiration, linear combination ($z = \mathbf{w} \cdot \mathbf{x} + b$), and live 2D decision boundary visualization.
@@ -28,7 +28,7 @@ An interactive, visual textbook that teaches deep learning from first principles
 
 ---
 
-## 🚀 Quickstart & Setup
+## Quickstart & Setup
 
 ### Prerequisites
 - Node.js 18+ (Node 20+ recommended)
@@ -52,7 +52,7 @@ Visit `http://localhost:5173` in your browser.
 
 ---
 
-## 🛠️ Available Scripts
+## Available Scripts
 
 | Command | Purpose |
 | :--- | :--- |
@@ -67,13 +67,13 @@ Visit `http://localhost:5173` in your browser.
 
 ---
 
-## 🧭 Navigation Architecture
+## Navigation Architecture
 
 All programmatic page scrolling flows exclusively through the single controlled function `navigateTo(id, { source, behavior })` in `src/lib/navigation.ts`. Every sidebar link, subsection link, back-to-top button, mobile drawer item, and initial hash-on-load event routes through this function. While scrolling, a navigation lock freezes the scroll-spy observer, immediately updates sidebar highlights on frame 1, prevents competing scroll commands, verifies the final resting position within 2px, and updates browser history cleanly with `history.replaceState`.
 
 ---
 
-## 📂 Project Architecture
+## Project Architecture
 
 ```
 App/
@@ -110,7 +110,7 @@ App/
 
 ---
 
-## 📖 How to Add a New Section
+## How to Add a New Section
 
 To add a new chapter or topic to the guide:
 
@@ -142,7 +142,7 @@ To add a new chapter or topic to the guide:
 
 ---
 
-## 💡 How to Get the Most Out of This Guide
+## How to Get the Most Out of This Guide
 
 1. **Follow the "Try this" prompts**: Every interactive figure has guided experiment challenges showing edge cases.
 2. **Hover and focus formulas & code**: Code blocks feature clickable annotations that highlight the exact corresponding mathematical symbols.
@@ -153,7 +153,7 @@ To add a new chapter or topic to the guide:
 
 ---
 
-## 🌐 Deployment
+## Deployment
 
 ### Deploying to Vercel (Default)
 The project includes `vercel.json` with single-page app rewrites. To deploy:

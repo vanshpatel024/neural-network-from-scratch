@@ -6,7 +6,7 @@ The goal is not to use a high-level framework like TensorFlow or PyTorch. Instea
 
 ---
 
-## 📚 What This Project Includes
+## What This Project Includes
 
 - **Core Python Engine**:
   - Dense layers with full forward and backward passes
@@ -24,7 +24,7 @@ The goal is not to use a high-level framework like TensorFlow or PyTorch. Instea
 
 ---
 
-## 🚀 Running the Interactive Visualizer
+## Running the Interactive Visualizer
 
 The interactive guide lives in the `App/` directory:
 
@@ -40,7 +40,7 @@ For full architecture details, deployment options (Vercel & GitHub Pages), and d
 
 ---
 
-## 🧪 Running the Quality Gates
+## Running the Quality Gates
 
 Inside the `App/` directory:
 
@@ -54,6 +54,6 @@ npm run build         # Build production bundle
 
 ---
 
-## 📄 License
+## License
 
 MIT License. Free for learning, teaching, and experimentation.
