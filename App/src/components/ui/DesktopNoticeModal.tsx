@@ -14,8 +14,20 @@ export function DesktopNoticeModal(): JSX.Element | null {
     }
 
     const checkWidth = (): void => {
+      try {
+        const dismissed = sessionStorage.getItem('dismissed_desktop_notice');
+        if (dismissed === 'true') {
+          setIsOpen(false);
+          return;
+        }
+      } catch {
+        // Ignore storage error
+      }
+
       if (window.innerWidth <= 768) {
         setIsOpen(true);
+      } else {
+        setIsOpen(false);
       }
     };
 

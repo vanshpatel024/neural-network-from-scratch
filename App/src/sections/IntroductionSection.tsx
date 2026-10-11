@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { Math as MathEquation } from '@/components/ui/Math';
 import { CodeBlock } from '@/components/ui/CodeBlock';
@@ -206,6 +207,13 @@ export function IntroductionSection(): JSX.Element {
           Here, data flows from 400 pixel inputs through two hidden layers to one output value.
           The final number predicts whether an image is a 0 or a 1.
         </P>
+
+        <Callout variant="note" title="Try It">
+          Want to see this network in action?{' '}
+          <Link to="/" className="font-medium text-accent hover:underline">
+            Test the trained digit model in the interactive demo &rarr;
+          </Link>
+        </Callout>
       </Reveal>
 
       <Reveal direction="up" delay={0.05}>

@@ -67,6 +67,39 @@ Visit `http://localhost:5173` in your browser.
 
 ---
 
+## Application Routes & Deployment Base
+
+The site provides two primary pages and a clean fallback:
+
+- **Home (`/`)**: Interactive digit classifier where users test the trained neural network.
+- **Documentation (`/docs`)**: The complete interactive deep learning textbook with all 11 chapters.
+- **404 (`*`)**: Minimal, plain-language not-found page with a link back to Home.
+
+### Base Path Support (`VITE_BASE`)
+
+The build supports custom base paths (e.g., for GitHub Pages repository hosting). Vite and React Router read `VITE_BASE` or `VITE_BASE_PATH`:
+
+```bash
+# Default build (root path '/')
+npm run build
+
+# Custom base path build (e.g., GitHub Pages)
+VITE_BASE="/neural-network-from-scratch/" npm run build
+```
+
+SPA fallback rewrites are configured for Vercel (`vercel.json`), Netlify (`public/_redirects`), and GitHub Pages (post-build copy to `dist/404.html`).
+
+---
+
+## How Deep Links Work
+
+- **Anchor Format**: Deep links point to documentation sections (e.g., `/docs#gradient-descent`) and subsections (e.g., `/docs#gradient-descent--learning-rate-lab`).
+- **Lazy Loading & Fonts**: When loading `/docs` with a hash, `DocsPage` is code-split and loaded lazily. Once the chunk mounts and `document.fonts.ready` resolves, the page glides smoothly to the target section.
+- **Single Controller**: Programmatic scrolling flows strictly through `navigateTo(id)` in `src/lib/navigation.ts`.
+- **Typed Links Helper**: Deep links from the Home page or external components use `docsLink(sectionId, subsectionId?)` from `src/lib/links.ts`. In development, it validates IDs against the registry while keeping docs-heavy bundles isolated from the Home route.
+
+---
+
 ## Navigation Architecture
 
 All programmatic page scrolling flows exclusively through the single controlled function `navigateTo(id, { source, behavior })` in `src/lib/navigation.ts`. Every sidebar link, subsection link, back-to-top button, mobile drawer item, and initial hash-on-load event routes through this function. While scrolling, a navigation lock freezes the scroll-spy observer, immediately updates sidebar highlights on frame 1, prevents competing scroll commands, verifies the final resting position within 2px, and updates browser history cleanly with `history.replaceState`.

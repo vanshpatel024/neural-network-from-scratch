@@ -245,6 +245,13 @@ button:focus:not(:focus-visible),
   letter-spacing: -0.025em;
 }
 
+@utility skeleton-badge-header {
+  height: 27px;
+  @media (max-width: 365px) {
+    height: 44px;
+  }
+}
+
 /* Custom scrollbar for sleek dark look */
 ::-webkit-scrollbar {
   width: 6px;

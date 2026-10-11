@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import type { SectionItem } from '@/sections/types';
 import { useNavigationStore, navigateTo } from '@/lib/navigation';
 
@@ -23,6 +24,7 @@ export function useActiveSection({
   offset = 140,
   subsectionOffset = 96,
 }: UseActiveSectionOptions): UseActiveSectionReturn {
+  const location = useLocation();
   const activeId = useNavigationStore((s) => s.activeId);
   const activeSubsectionId = useNavigationStore((s) => s.activeSubsectionId);
   const setActiveId = useNavigationStore((s) => s.setActiveId);
@@ -43,27 +45,36 @@ export function useActiveSection({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const initialHash = window.location.hash.replace('#', '');
-    if (!initialHash) return;
+    const currentHash = location.hash.replace(/^#/, '');
+    if (!currentHash) return;
 
-    const handleInitialHash = () => {
-      navigateTo(initialHash, { source: 'initial-hash', behavior: 'auto' });
-    };
+    const activeSecId = currentHash.includes('--')
+      ? currentHash.split('--')[0]!
+      : currentHash;
+    const activeSubId = currentHash.includes('--') ? currentHash : null;
+
+    // Immediately set navigation store lock & active IDs so scroll-spy does not override
+    useNavigationStore.setState({
+      activeId: activeSecId,
+      activeSubsectionId: activeSubId,
+      isNavigating: true,
+      targetId: currentHash,
+    });
 
     const fontPromise =
       document.fonts && document.fonts.ready
         ? Promise.race([
             document.fonts.ready,
-            new Promise((r) => setTimeout(r, 200)),
+            new Promise((r) => setTimeout(r, 150)),
           ])
         : Promise.resolve();
 
     fontPromise.then(() => {
       requestAnimationFrame(() => {
-        handleInitialHash();
+        navigateTo(currentHash, { source: 'route-hash', behavior: 'smooth' });
       });
     });
-  }, []);
+  }, [location.hash]);
 
   // Two-level scroll-spy with IntersectionObserver over sections and subsections
   useEffect(() => {
@@ -103,13 +114,16 @@ export function useActiveSection({
 
       // 2. Top of page check
       if (scrollY < 120) {
+        if (useNavigationStore.getState().isNavigating) {
+          return;
+        }
         const firstSection = sections[0];
         const firstId = firstSection?.id ?? 'introduction';
         useNavigationStore.setState({
           activeId: firstId,
           activeSubsectionId: null,
         });
-        if (window.location.hash) {
+        if (window.location.hash && !useNavigationStore.getState().targetId) {
           window.history.replaceState(null, '', window.location.pathname);
         }
         return;
@@ -192,8 +206,10 @@ export function useActiveSection({
     window.addEventListener('scroll', handleScrollOrIntersect, { passive: true });
     window.addEventListener('resize', handleScrollOrIntersect, { passive: true });
 
-    // Initial pass
-    computeActive();
+    // Initial pass (only if not navigating and no initial hash)
+    if (!useNavigationStore.getState().isNavigating && !location.hash) {
+      computeActive();
+    }
 
     return () => {
       observer.disconnect();
@@ -203,7 +219,7 @@ export function useActiveSection({
         cancelAnimationFrame(rafId);
       }
     };
-  }, [sections, offset, subsectionOffset]);
+  }, [sections, offset, subsectionOffset, location.hash]);
 
   return {
     activeId,

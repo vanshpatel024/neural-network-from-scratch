@@ -96,9 +96,12 @@ export async function navigateTo(
     if (cleanId !== 'top' && cleanId !== '') {
       targetElement = document.getElementById(cleanId);
       if (!targetElement) {
-        await new Promise((r) => requestAnimationFrame(r));
-        if (currentSequence !== navSequence) return;
-        targetElement = document.getElementById(cleanId);
+        const startRetry = performance.now();
+        while (!targetElement && performance.now() - startRetry < 800) {
+          await new Promise((r) => setTimeout(r, 40));
+          if (currentSequence !== navSequence) return;
+          targetElement = document.getElementById(cleanId);
+        }
       }
 
       if (targetElement) {

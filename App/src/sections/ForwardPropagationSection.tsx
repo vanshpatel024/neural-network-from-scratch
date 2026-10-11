@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
 import { Math as MathEquation } from '@/components/ui/Math';
 import { CodeBlock, type CodeAnnotation } from '@/components/ui/CodeBlock';
@@ -156,6 +157,13 @@ export function ForwardPropagationSection(): JSX.Element {
         >
           <NetworkForwardDiagram />
         </Figure>
+
+        <Callout variant="note" title="Try It">
+          See this forward pass classify hand-drawn digits.{' '}
+          <Link to="/" className="font-medium text-accent hover:underline">
+            Try the digit classifier demo &rarr;
+          </Link>
+        </Callout>
       </Reveal>
 
       {/* 3. Shape Matching & Invariants */}

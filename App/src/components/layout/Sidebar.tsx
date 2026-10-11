@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect, type MouseEvent } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion, type Variants } from 'framer-motion';
-import { Menu, X, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronRight, ArrowLeft } from 'lucide-react';
 import { SECTIONS, SECTION_GROUPS, type SectionItem, type SubsectionItem } from '@/sections';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { useNavigationStore, navigateTo } from '@/lib/navigation';
+import { preloadHomePage } from '@/lib/preloadHome';
 
 const EASING_CURVE = [0.22, 1, 0.36, 1] as const;
 
@@ -156,23 +158,6 @@ export function Sidebar({
     }
   };
 
-  const handleScrollToTopClick = (
-    e: MouseEvent<HTMLAnchorElement>,
-    isMobile: boolean
-  ): void => {
-    e.preventDefault();
-    userInteractedNavUntilRef.current = Date.now() + 2000;
-    if (isMobile) {
-      onCloseMobile();
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          navigateTo('top', { source: 'mobile-top' });
-        });
-      });
-    } else {
-      navigateTo('top', { source: 'desktop-top' });
-    }
-  };
 
   const isSectionOpen = (item: SectionItem): boolean => {
     if (item.subsections.length === 0) return false;
@@ -229,6 +214,20 @@ export function Sidebar({
       aria-label="Documentation sections"
       className="flex flex-col gap-6 p-4"
     >
+      {/* Quiet Back to Demo item above first group */}
+      <div className="-mt-1 mb-[-12px]">
+        <Link
+          to="/"
+          onMouseEnter={preloadHomePage}
+          onFocus={preloadHomePage}
+          onClick={isMobile ? onCloseMobile : undefined}
+          className="group flex items-center gap-2.5 rounded-md px-3 py-2 text-caption font-medium text-text-secondary hover:text-text-primary hover:bg-surface transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+        >
+          <ArrowLeft className="h-4 w-4 shrink-0 text-text-muted transition-colors group-hover:text-text-secondary" />
+          <span>Back to demo</span>
+        </Link>
+      </div>
+
       {SECTION_GROUPS.map((group) => {
         const groupSections = SECTIONS.filter((s) => s.group === group);
         if (groupSections.length === 0) return null;
@@ -386,14 +385,22 @@ export function Sidebar({
     <>
       {/* Mobile Top Bar */}
       <header className="sticky top-0 z-40 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-base/90 px-4 backdrop-blur-md lg:hidden">
-        <a
-          href="#"
-          onClick={(e) => handleScrollToTopClick(e, true)}
-          className="flex items-center gap-2 text-body font-semibold tracking-tight text-text-primary hover:text-accent transition-colors"
-        >
-          <span className="h-2 w-2 rounded-full bg-accent" />
-          <span>Neural Network From Scratch</span>
-        </a>
+        <div className="flex items-center min-w-0 mr-2">
+          <Link
+            to="/"
+            onMouseEnter={preloadHomePage}
+            onFocus={preloadHomePage}
+            aria-label="Back to the demo"
+            className="group flex min-h-[40px] items-center gap-2 rounded-md px-1.5 py-1 text-body font-semibold tracking-tight text-text-primary transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer min-w-0"
+          >
+            <span
+              className="h-2 w-2 rounded-full bg-accent shrink-0 transition-transform group-hover:scale-110"
+              aria-hidden="true"
+            />
+            <span className="truncate">Neural Network From Scratch</span>
+          </Link>
+        </div>
+
         <Tooltip
           content={isOpenMobile ? 'Close menu' : 'Open menu'}
           placement="bottom"
@@ -403,7 +410,7 @@ export function Sidebar({
             onClick={onToggleMobile}
             aria-label={isOpenMobile ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpenMobile}
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-border-subtle bg-surface text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-border-subtle bg-surface text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent shrink-0"
           >
             {isOpenMobile ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -460,15 +467,18 @@ export function Sidebar({
 
       {/* Desktop Fixed Left Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 flex-col border-r border-border-subtle bg-base lg:flex">
-        <div className="flex h-16 items-center border-b border-border-subtle px-6">
-          <a
-            href="#"
-            onClick={(e) => handleScrollToTopClick(e, false)}
-            className="flex items-center gap-2.5 text-body font-semibold tracking-tight text-text-primary hover:text-accent transition-colors"
-          >
-            <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-            <span>Neural Network From Scratch</span>
-          </a>
+        <div className="flex h-14 items-center border-b border-border-subtle px-6">
+          <Tooltip content="Back to the demo" placement="right">
+            <Link
+              to="/"
+              onMouseEnter={preloadHomePage}
+              onFocus={preloadHomePage}
+              className="flex items-center gap-2.5 text-body font-semibold tracking-tight text-text-primary hover:text-accent transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-sm"
+            >
+              <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+              <span>Neural Network From Scratch</span>
+            </Link>
+          </Tooltip>
         </div>
         <div
           ref={desktopNavRef}
@@ -477,11 +487,6 @@ export function Sidebar({
           className="flex-1 overflow-y-auto py-2"
         >
           {renderNavContent(false)}
-        </div>
-        <div className="border-t border-border-subtle px-6 py-4">
-          <div className="text-caption text-text-muted">
-            Interactive Guide
-          </div>
         </div>
       </aside>
     </>

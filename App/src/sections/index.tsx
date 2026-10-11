@@ -23,7 +23,9 @@ import { WeightInitializationSection } from './WeightInitializationSection';
 import { MiniBatchSgdSection } from './MiniBatchSgdSection';
 import { GradientCheckingSection } from './GradientCheckingSection';
 import { lazy, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import { SectionWrapper } from '@/components/layout/SectionWrapper';
+import { Callout } from '@/components/ui/Callout';
 
 const LazyPlaygroundSection = lazy(() =>
   import('./playground/PlaygroundSection').then((m) => ({
@@ -38,16 +40,47 @@ function TrainModelSection(): JSX.Element {
       title="Train Your Own Model"
       eyebrow="Interactive Playground"
     >
+      <Callout variant="note" title="Try It">
+        Our home demo runs an already trained digit model in real time. In this playground, you train small toy models from scratch in your browser.{' '}
+        <Link to="/" className="font-medium text-accent hover:underline">
+          Go to the digit demo &rarr;
+        </Link>
+      </Callout>
       <Suspense
         fallback={
-          <div className="h-96 rounded-2xl bg-surface/50 border border-border-subtle flex flex-col items-center justify-center p-8 gap-3 text-text-muted text-caption text-center max-w-lg mx-auto">
-            <span className="font-medium text-text">Loading the interactive model playground.</span>
-            <span>
-              Here you can train your neural network on simple 2D datasets.
-              You can adjust the learning rate, change batch size, and choose an activation function.
-              Watch the loss go down on the chart as the model learns each epoch.
-              Click a point on the canvas to add data or inspect hidden units.
-            </span>
+          <div
+            className="w-full rounded-2xl border border-border-subtle bg-surface/40 p-6 space-y-6 animate-pulse"
+            aria-busy="true"
+            aria-label="Loading interactive playground"
+          >
+            {/* Top preset toolbar skeleton */}
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle pb-4">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-24 rounded-lg bg-surface/80" />
+                <div className="h-8 w-24 rounded-lg bg-surface/60" />
+                <div className="h-8 w-24 rounded-lg bg-surface/60" />
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-20 rounded-md bg-surface/60" />
+                <div className="h-8 w-28 rounded-md bg-surface/80" />
+              </div>
+            </div>
+
+            {/* Main playground body skeleton */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              {/* Canvas area */}
+              <div className="lg:col-span-7 h-80 sm:h-96 rounded-xl bg-base border border-border-subtle flex flex-col items-center justify-center text-caption text-text-muted">
+                <div className="h-3 w-32 rounded bg-surface/60 mb-2" />
+                <span className="text-[11px]">Loading this tool.</span>
+              </div>
+
+              {/* Controls and charts area */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="h-10 rounded-lg bg-surface/80" />
+                <div className="h-32 rounded-xl bg-base border border-border-subtle" />
+                <div className="h-28 rounded-xl bg-base border border-border-subtle" />
+              </div>
+            </div>
           </div>
         }
       >

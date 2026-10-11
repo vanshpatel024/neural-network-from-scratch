@@ -17,7 +17,7 @@ export function SectionWrapper({
   return (
     <section
       id={id}
-      className="scroll-mt-24 border-b border-border-subtle py-16 first:pt-8 last:border-b-0 focus:outline-none"
+      className="scroll-mt-24 border-b border-border-subtle py-12 first:pt-6 last:border-b-0 last:pb-4 focus:outline-none"
     >
       <div className="w-full min-w-0">
         {eyebrow && (

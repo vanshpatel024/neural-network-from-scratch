@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
+import { hasVisitedPage } from '@/lib/visitedPages';
 
 export interface RevealProps {
   children: ReactNode;
@@ -15,8 +17,10 @@ export function Reveal({
   className = '',
 }: RevealProps): JSX.Element {
   const shouldReduceMotion = useReducedMotion();
+  const location = useLocation();
+  const isFirstVisit = !hasVisitedPage(location.pathname);
 
-  if (shouldReduceMotion) {
+  if (shouldReduceMotion || !isFirstVisit) {
     return <div className={className}>{children}</div>;
   }
 
