@@ -23,3 +23,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Testing & E2E
+*.test.ts
+*.test.tsx
+vitest.config.ts
+test-results/
+playwright-report/
+blob-report/
+coverage/
+scripts/test-*.ts

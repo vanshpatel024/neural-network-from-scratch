@@ -6,14 +6,15 @@ export function HomeSkeleton(): JSX.Element {
       aria-label="Loading home page"
     >
       {/* TopBar Skeleton */}
-      <header className="sticky top-0 z-40 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-base px-3 sm:px-6">
-        <div className="flex items-center gap-2 min-w-0 mr-2">
-          <div className="h-2 w-2 rounded-full bg-accent/60 animate-pulse shrink-0" />
-          <div className="h-4 w-28 sm:w-44 rounded bg-surface animate-pulse" />
-        </div>
-        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-          <div className="h-4 w-12 sm:w-20 rounded bg-surface animate-pulse" />
-          <div className="h-4 w-12 sm:w-24 rounded bg-surface animate-pulse" />
+      <header className="sticky top-0 z-40 w-full border-b border-border-subtle bg-base">
+        <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2 min-w-0 mr-2 -ml-1.5">
+            <div className="h-2 w-2 rounded-full bg-accent/60 animate-pulse shrink-0" />
+            <div className="h-4 w-16 min-[400px]:w-28 sm:w-44 rounded bg-surface animate-pulse" />
+          </div>
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0 -mr-2 sm:-mr-3">
+            <div className="h-4 w-12 sm:w-24 rounded bg-surface animate-pulse" />
+          </div>
         </div>
       </header>
 

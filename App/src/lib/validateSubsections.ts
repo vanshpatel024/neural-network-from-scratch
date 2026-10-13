@@ -48,11 +48,20 @@ export function validateSubsections(): void {
     }
   });
 
-  registeredIds.forEach((id) => {
-    if (!domIds.has(id)) {
-      console.warn(
-        `[Subsections Validation] Registered subsection id="${id}" was not found in the DOM.`
-      );
+  for (const section of SECTIONS) {
+    const sectionEl = document.getElementById(section.id);
+    // If the section is not yet mounted or is currently displaying its loading skeleton, skip checking its subsections
+    const isSkeleton = sectionEl?.getAttribute('aria-label')?.startsWith('Loading section');
+    if (!sectionEl || isSkeleton) {
+      continue;
     }
-  });
+
+    for (const sub of section.subsections) {
+      if (!domIds.has(sub.id)) {
+        console.warn(
+          `[Subsections Validation] Registered subsection id="${sub.id}" in section "${section.id}" was not found in the DOM.`
+        );
+      }
+    }
+  }
 }

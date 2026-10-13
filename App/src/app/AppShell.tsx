@@ -106,14 +106,14 @@ export function AppShell(): JSX.Element {
 
   const pageVariants = shouldAnimate
     ? {
-        initial: { opacity: 0, y: 6 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -6 },
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
         transition: { duration: 0.18, ease: 'easeOut' as const },
       }
     : {
         initial: false as const,
-        animate: { opacity: 1, y: 0 },
+        animate: { opacity: 1 },
         exit: { opacity: 1 },
         transition: { duration: 0 },
       };

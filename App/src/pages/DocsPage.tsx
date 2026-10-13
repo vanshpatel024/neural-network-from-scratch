@@ -28,7 +28,7 @@ export function DocsPage(): JSX.Element {
     if (import.meta.env.DEV) {
       const timer = setTimeout(() => {
         validateSubsections();
-      }, 1500);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, []);

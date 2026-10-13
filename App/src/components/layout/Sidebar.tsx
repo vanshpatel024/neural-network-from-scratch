@@ -385,7 +385,7 @@ export function Sidebar({
     <>
       {/* Mobile Top Bar */}
       <header className="sticky top-0 z-40 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-base/90 px-4 backdrop-blur-md lg:hidden">
-        <div className="flex items-center min-w-0 mr-2">
+        <div className="flex items-center min-w-0 mr-2 -ml-1.5">
           <Link
             to="/"
             onMouseEnter={preloadHomePage}
@@ -397,7 +397,15 @@ export function Sidebar({
               className="h-2 w-2 rounded-full bg-accent shrink-0 transition-transform group-hover:scale-110"
               aria-hidden="true"
             />
-            <span className="truncate">Neural Network From Scratch</span>
+            <span className="hidden sm:inline truncate">
+              Neural Network From Scratch
+            </span>
+            <span className="hidden min-[400px]:inline sm:hidden truncate">
+              NN From Scratch
+            </span>
+            <span className="inline min-[400px]:hidden truncate">
+              NNFS
+            </span>
           </Link>
         </div>
 

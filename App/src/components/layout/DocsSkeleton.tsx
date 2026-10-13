@@ -7,9 +7,9 @@ export function DocsSkeleton(): JSX.Element {
     >
       {/* Mobile Top Bar Skeleton */}
       <div className="sticky top-0 z-40 flex h-14 w-full items-center justify-between border-b border-border-subtle bg-base/90 px-4 backdrop-blur-md lg:hidden">
-        <div className="flex items-center gap-2 min-w-0 mr-2">
+        <div className="flex items-center gap-2 min-w-0 mr-2 -ml-1.5">
           <span className="h-2 w-2 rounded-full bg-accent/50 animate-pulse shrink-0" />
-          <div className="h-4 w-44 rounded bg-surface animate-pulse" />
+          <div className="h-4 w-16 min-[400px]:w-28 sm:w-44 rounded bg-surface animate-pulse" />
         </div>
         <div className="h-9 w-9 rounded-md border border-border-subtle bg-surface animate-pulse shrink-0" />
       </div>
