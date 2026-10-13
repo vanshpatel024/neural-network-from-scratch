@@ -12,7 +12,7 @@ export function NotFoundPage(): JSX.Element {
           <img
             src={`${import.meta.env.BASE_URL}favicon.svg`}
             alt="Neural Network From Scratch"
-            className="h-16 w-16 select-none transition-transform duration-300 hover:scale-105"
+            className="h-16 w-16 select-none"
             width={64}
             height={64}
           />
