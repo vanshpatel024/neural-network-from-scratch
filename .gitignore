@@ -1,9 +1,14 @@
 dataset
 __pycache__
 test/
-model_weights.json
+/model_weights.json
+!App/public/model_weights.json
 node_modules
 dist
 .DS_Store
 documentation/
 Future Implementations/
+*.test.ts
+*.test.tsx
+test-results/
+playwright-report/
