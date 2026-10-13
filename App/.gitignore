@@ -33,3 +33,5 @@ playwright-report/
 blob-report/
 coverage/
 scripts/test-*.ts
+scratch/
+

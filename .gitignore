@@ -12,3 +12,4 @@ Future Implementations/
 *.test.tsx
 test-results/
 playwright-report/
+scratch/
