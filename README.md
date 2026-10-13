@@ -51,9 +51,3 @@ npm run lint          # Run ESLint
 npm run check:language# Audit reading grade level (Grade <= 8.0)
 npm run build         # Build production bundle
 ```
-
----
-
-## License
-
-MIT License. Free for learning, teaching, and experimentation.
