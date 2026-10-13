@@ -1,112 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <!-- Container Base -->
+  <rect x="4" y="4" width="120" height="120" rx="28" fill="#09090b" stroke="#27272a" stroke-width="2" />
+
+  <!-- Subtle Structural Synapses (Feed-forward network topology) -->
+  <g stroke="#27272a" stroke-width="2.5" stroke-linecap="round">
+    <line x1="36" y1="90" x2="64" y2="64" />
+    <line x1="64" y1="64" x2="92" y2="38" />
+  </g>
+
+  <!-- Gradient for the active "N" pathway -->
   <defs>
-    <!-- Base Gradient -->
-    <linearGradient id="nn-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#141419" />
-      <stop offset="100%" stop-color="#09090b" />
+    <linearGradient id="n-path" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="60%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#60a5fa" />
     </linearGradient>
-
-    <!-- Ambient Center Glow -->
-    <radialGradient id="nn-ambient" cx="50%" cy="50%" r="55%">
-      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.32" />
-      <stop offset="70%" stop-color="#1d4ed8" stop-opacity="0.08" />
-      <stop offset="100%" stop-color="#09090b" stop-opacity="0" />
-    </radialGradient>
-
-    <!-- Active Synapse Gradient (Electric Blue -> Cyan) -->
-    <linearGradient id="nn-active" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#60a5fa" />
-      <stop offset="50%" stop-color="#3b82f6" />
-      <stop offset="100%" stop-color="#06b6d4" />
-    </linearGradient>
-
-    <!-- Subtle Secondary Synapse Gradient -->
-    <linearGradient id="nn-subtle" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35" />
-      <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0.18" />
-    </linearGradient>
-
-    <!-- Glow Filter -->
-    <filter id="nn-glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="3" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
   </defs>
 
-  <!-- Squircle Base with border -->
-  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#nn-bg)" stroke="#27272a" stroke-width="2" />
-  <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#nn-ambient)" />
+  <!-- Active "N" Synaptic Core Pathway -->
+  <path d="M 36 90 L 36 38 L 64 64 L 92 90 L 92 38" 
+        fill="none" 
+        stroke="url(#n-path)" 
+        stroke-width="5.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
 
-  <!-- Secondary Synaptic Connections -->
-  <g stroke-linecap="round">
-    <line x1="30" y1="36" x2="64" y2="30" stroke="url(#nn-subtle)" stroke-width="2" />
-    <line x1="30" y1="92" x2="64" y2="64" stroke="url(#nn-subtle)" stroke-width="2" />
-    <line x1="30" y1="92" x2="64" y2="98" stroke="url(#nn-subtle)" stroke-width="2" />
-    <line x1="64" y1="30" x2="98" y2="36" stroke="url(#nn-subtle)" stroke-width="2" />
-    <line x1="64" y1="98" x2="98" y2="92" stroke="url(#nn-subtle)" stroke-width="2" />
-    <line x1="64" y1="64" x2="98" y2="36" stroke="url(#nn-subtle)" stroke-width="2" />
-  </g>
+  <!-- Layer 1: Input Neurons -->
+  <circle cx="36" cy="90" r="6" fill="#2563eb" stroke="#09090b" stroke-width="2" />
+  <circle cx="36" cy="38" r="6.5" fill="#f8fafc" stroke="#09090b" stroke-width="2" />
 
-  <!-- Active "N" Synapse Pathways -->
-  <g stroke-linecap="round" stroke-linejoin="round">
-    <!-- Glow halo -->
-    <path d="M 30 92 L 30 36 L 64 64 L 98 92 L 98 36" 
-          fill="none" 
-          stroke="#3b82f6" 
-          stroke-width="9" 
-          opacity="0.32" 
-          filter="url(#nn-glow)" />
+  <!-- Layer 2: Hidden Neuron (Center focal unit) -->
+  <circle cx="64" cy="64" r="7.5" fill="#3b82f6" stroke="#09090b" stroke-width="2" />
+  <circle cx="64" cy="64" r="3" fill="#ffffff" />
 
-    <!-- Vibrant Core Line -->
-    <path d="M 30 92 L 30 36 L 64 64 L 98 92 L 98 36" 
-          fill="none" 
-          stroke="url(#nn-active)" 
-          stroke-width="4.5" />
-  </g>
-
-  <!-- Neural Nodes -->
-  <!-- Layer 1: Inputs -->
-  <g>
-    <!-- Node (30, 36) -->
-    <circle cx="30" cy="36" r="10" fill="#3b82f6" opacity="0.25" />
-    <circle cx="30" cy="36" r="6.5" fill="#09090b" stroke="#60a5fa" stroke-width="2.5" />
-    <circle cx="30" cy="36" r="3" fill="#ffffff" />
-
-    <!-- Node (30, 92) -->
-    <circle cx="30" cy="92" r="10" fill="#3b82f6" opacity="0.25" />
-    <circle cx="30" cy="92" r="6.5" fill="#09090b" stroke="#3b82f6" stroke-width="2.5" />
-    <circle cx="30" cy="92" r="3" fill="#60a5fa" />
-  </g>
-
-  <!-- Layer 2: Hidden -->
-  <g>
-    <!-- Node (64, 30) -->
-    <circle cx="64" cy="30" r="5" fill="#09090b" stroke="#3f3f46" stroke-width="2" />
-    <circle cx="64" cy="30" r="2" fill="#71717a" />
-
-    <!-- Node (64, 64) - Core Hub -->
-    <circle cx="64" cy="64" r="12" fill="#06b6d4" opacity="0.3" filter="url(#nn-glow)" />
-    <circle cx="64" cy="64" r="7.5" fill="#09090b" stroke="#38bdf8" stroke-width="3" />
-    <circle cx="64" cy="64" r="3.5" fill="#ffffff" />
-
-    <!-- Node (64, 98) -->
-    <circle cx="64" cy="98" r="5" fill="#09090b" stroke="#3f3f46" stroke-width="2" />
-    <circle cx="64" cy="98" r="2" fill="#71717a" />
-  </g>
-
-  <!-- Layer 3: Output -->
-  <g>
-    <!-- Node (98, 36) -->
-    <circle cx="98" cy="36" r="10" fill="#06b6d4" opacity="0.25" />
-    <circle cx="98" cy="36" r="6.5" fill="#09090b" stroke="#06b6d4" stroke-width="2.5" />
-    <circle cx="98" cy="36" r="3" fill="#ffffff" />
-
-    <!-- Node (98, 92) -->
-    <circle cx="98" cy="92" r="10" fill="#3b82f6" opacity="0.25" />
-    <circle cx="98" cy="92" r="6.5" fill="#09090b" stroke="#3b82f6" stroke-width="2.5" />
-    <circle cx="98" cy="92" r="3" fill="#60a5fa" />
-  </g>
+  <!-- Layer 3: Output Neurons -->
+  <circle cx="92" cy="90" r="6" fill="#3b82f6" stroke="#09090b" stroke-width="2" />
+  <circle cx="92" cy="38" r="6.5" fill="#f8fafc" stroke="#09090b" stroke-width="2" />
 </svg>
