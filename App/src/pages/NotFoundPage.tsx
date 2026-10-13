@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, HelpCircle } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { TopBar } from '@/components/layout/TopBar';
 
 export function NotFoundPage(): JSX.Element {
@@ -8,8 +8,14 @@ export function NotFoundPage(): JSX.Element {
       <TopBar />
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-16 text-center max-w-lg mx-auto w-full">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full border border-border-subtle bg-surface text-accent mb-6">
-          <HelpCircle className="w-6 h-6" />
+        <div className="mb-6 flex items-center justify-center">
+          <img
+            src={`${import.meta.env.BASE_URL}favicon.svg`}
+            alt="Neural Network From Scratch"
+            className="h-16 w-16 select-none transition-transform duration-300 hover:scale-105"
+            width={64}
+            height={64}
+          />
         </div>
 
         <h1
