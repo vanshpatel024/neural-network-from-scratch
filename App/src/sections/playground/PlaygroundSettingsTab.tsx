@@ -179,9 +179,20 @@ export function PlaygroundSettingsTab({
         {/* Activation & Initialization Selects */}
         <div className="grid grid-cols-2 gap-2.5 pt-1">
           <div className="flex flex-col gap-1">
-            <label className="text-caption text-text-secondary font-medium">
-              Activation
-            </label>
+            <div className="flex items-center gap-1">
+              <label className="text-caption text-text-secondary font-medium">
+                Activation
+              </label>
+              <Tooltip content="The playground trains with ReLU, Sigmoid, Tanh, and Linear. Leaky ReLU appears in the Activation Functions section's curve tool only.">
+                <button
+                  type="button"
+                  aria-label="Activation details"
+                  className="text-text-muted hover:text-text-primary cursor-pointer"
+                >
+                  <Info className="w-3.5 h-3.5" />
+                </button>
+              </Tooltip>
+            </div>
             <select
               value={activation}
               onChange={(e) => onSetActivation(e.target.value as ActivationType)}

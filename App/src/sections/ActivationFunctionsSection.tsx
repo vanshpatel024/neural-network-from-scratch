@@ -19,23 +19,50 @@ const ACTIVATIONS_PYTHON_CODE = `# Activation classes implemented in activations
 class ReLU:
     def forward(self, z):
         self.z = z
-        return np.maximum(0, z)
-        
+        self.a = np.maximum(0, z)
+        return self.a
+    
     def backward(self, dA):
         return dA * (self.z > 0)
 
 class Sigmoid:
     def forward(self, z):
-        self.a = 1.0 / (1.0 + np.exp(-z))
+        self.z = z
+        self.a = 1 / (1 + np.exp(-z))
         return self.a
-        
+    
     def backward(self, dA):
-        return dA * (self.a * (1.0 - self.a))`;
+        # Keep 'a' away from exactly 0 and 1, the same limit the loss uses.
+        a = np.clip(self.a, 1e-15, 1 - 1e-15)
+        return dA * (a * (1 - a))
+
+class Tanh:
+    def forward(self, z):
+        self.z = z
+        exp_z = np.exp(z)
+        exp_neg_z = np.exp(-z)
+        self.a = (exp_z - exp_neg_z) / (exp_z + exp_neg_z)
+        return self.a
+    
+    def backward(self, dA):
+        return dA * (1.0 - self.a**2)
+
+class LeakyReLU:
+    def __init__(self, alpha=0.01):
+        self.alpha = alpha
+    
+    def forward(self, z):
+        self.z = z
+        return np.where(z > 0, z, self.alpha * z)
+    
+    def backward(self, dA):
+        dz = np.where(self.z > 0, 1.0, self.alpha)
+        return dA * dz`;
 
 const ACTIVATION_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   {
     id: 'relu-forward',
-    lines: [2, 5],
+    lines: [3, 6],
     title: 'ReLU forward step',
     equation: 'a = \\max(0, z)',
     explanation: (
@@ -47,37 +74,85 @@ const ACTIVATION_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   },
   {
     id: 'relu-backward',
-    lines: [7, 8],
+    lines: [8, 9],
     title: 'ReLU backward step',
     equation: '\\frac{\\partial L}{\\partial z} = \\frac{\\partial L}{\\partial a} \\odot \\mathbf{1}_{z > 0}',
     explanation: (
       <span>
-        Multiplies the incoming gradient by 1 for positive inputs and 0 for negative inputs.
+        Multiplies incoming gradient by 1 for positive inputs and 0 for negative inputs.
         This rule keeps gradient signals flowing without shrinking.
       </span>
     ),
   },
   {
     id: 'sigmoid-forward',
-    lines: [10, 13],
+    lines: [12, 15],
     title: 'Sigmoid forward step',
     equation: 'a = \\sigma(z) = \\frac{1}{1 + e^{-z}}',
     explanation: (
       <span>
         Squashes any real number into the range between 0 and 1.
-        Saves the output <MathEquation math="a" /> for the backward pass.
+        Saves output <MathEquation math="a" /> for the backward pass.
       </span>
     ),
   },
   {
     id: 'sigmoid-backward',
-    lines: [15, 16],
+    lines: [17, 20],
     title: 'Sigmoid backward step',
     equation: '\\frac{\\partial L}{\\partial z} = \\frac{\\partial L}{\\partial a} \\odot [a (1 - a)]',
     explanation: (
       <span>
         Uses the formula <MathEquation math="\sigma'(z) = a(1 - a)" />.
-        The top slope is only 0.25, so gradients shrink by at least 75%.
+        Clips <MathEquation math="a" /> to <MathEquation math="[10^{-15}, 1 - 10^{-15}]" /> to match the loss.
+      </span>
+    ),
+  },
+  {
+    id: 'tanh-forward',
+    lines: [23, 28],
+    title: 'Tanh forward step',
+    equation: 'a = \\tanh(z) = \\frac{e^z - e^{-z}}{e^z + e^{-z}}',
+    explanation: (
+      <span>
+        Squashes inputs into the range between -1 and 1.
+        Saves output <MathEquation math="a" /> for the backward pass.
+      </span>
+    ),
+  },
+  {
+    id: 'tanh-backward',
+    lines: [30, 31],
+    title: 'Tanh backward step',
+    equation: '\\frac{\\partial L}{\\partial z} = \\frac{\\partial L}{\\partial a} \\odot (1 - a^2)',
+    explanation: (
+      <span>
+        Uses the derivative formula <MathEquation math="\tanh'(z) = 1 - a^2" />.
+        Its peak slope is 1.0 at <MathEquation math="z = 0" />.
+      </span>
+    ),
+  },
+  {
+    id: 'leaky-relu-forward',
+    lines: [37, 39],
+    title: 'LeakyReLU forward step',
+    equation: 'a = \\max(\\alpha z, z)',
+    explanation: (
+      <span>
+        Passes positive values unchanged.
+        Multiplies negative inputs by <MathEquation math="\alpha = 0.01" />.
+      </span>
+    ),
+  },
+  {
+    id: 'leaky-relu-backward',
+    lines: [41, 43],
+    title: 'LeakyReLU backward step',
+    equation: '\\frac{\\partial L}{\\partial z} = \\frac{\\partial L}{\\partial a} \\odot (1 \\text{ if } z > 0 \\text{ else } \\alpha)',
+    explanation: (
+      <span>
+        Multiplies incoming gradient by 1 for positive inputs and <MathEquation math="\alpha" /> for negative inputs.
+        This keeps a small gradient flowing so neurons do not die.
       </span>
     ),
   },
@@ -129,6 +204,10 @@ export function ActivationFunctionsSection(): JSX.Element {
           Pick an activation below to see its function curve and slope plotted together.
           Drag the blue input handle along the curve to inspect slopes in real time:
         </P>
+        <P>
+          The playground trains with ReLU, Sigmoid, Tanh, and Linear.
+          Leaky ReLU appears in this curve tool only.
+        </P>
 
         <Figure
           caption="Activation Curves & Derivatives: Notice how the amber derivative curve behaves as input z moves into extreme regions."
@@ -164,14 +243,14 @@ export function ActivationFunctionsSection(): JSX.Element {
       <Reveal direction="up" delay={0.05}>
         <SubHeading id="activation-functions--python-code">3. Code Implementation in Python</SubHeading>
         <P>
-          Here is how <InlineCode>activations.py</InlineCode> implements both the forward activation
-          and backward derivative:
+          Here is how <InlineCode>activations.py</InlineCode> implements forward activations
+          and backward derivatives:
         </P>
 
         <CodeBlock
           code={ACTIVATIONS_PYTHON_CODE}
           lang="python"
-          title="activations.py · ReLU and Sigmoid"
+          title="activations.py · ReLU, Sigmoid, Tanh, and LeakyReLU"
           annotations={ACTIVATION_CODE_ANNOTATIONS}
         />
       </Reveal>

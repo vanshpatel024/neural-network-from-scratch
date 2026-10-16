@@ -12,51 +12,70 @@ import {
 import { Reveal } from '@/components/ui/Reveal';
 import { MiniBatchContourPlot } from './mini-batch-sgd/MiniBatchContourPlot';
 
-const MINIBATCH_PYTHON_CODE = `# Mini-batch SGD in trainer.py
-import numpy as np
-
-def train_epoch(model, X, y, batch_size=16, learning_rate=0.1):
-    """
-    Shuffles data and performs mini-batch updates.
-    """
+const MINIBATCH_PYTHON_CODE = `def fit(self, X, y, epochs=1000, batch_size=32):
     n_samples = X.shape[0]
-    indices = np.random.permutation(n_samples)
-    X_shuffled = X[indices]
-    y_shuffled = y[indices]
-
-    total_loss = 0.0
-    for start in range(0, n_samples, batch_size):
-        end = min(start + batch_size, n_samples)
-        batch_X = X_shuffled[start:end]
-        batch_y = y_shuffled[start:end]
-
-        # Forward, backward, and SGD update
-        preds = model.forward(batch_X)
-        model.backward(batch_y)
-        model.update(learning_rate)
-
-    return total_loss`;
+    
+    for epoch in range(epochs):
+        # 1. Shuffle dataset at start of every epoch
+        permutation = np.random.permutation(n_samples)
+        X_shuffled = X[permutation]
+        y_shuffled = y[permutation]
+        
+        epoch_loss = 0
+        n_batches = 0
+        
+        # 2. Slice shuffled data into mini-batches
+        for start in range(0, n_samples, batch_size):
+            end = start + batch_size
+            X_batch = X_shuffled[start:end]
+            y_batch = y_shuffled[start:end]
+            
+            # 3. Forward pass on this batch only
+            y_pred = self.forward(X_batch)
+            
+            # 4. Calculate loss on this batch only
+            loss = self.loss_fn.forward(y_pred, y_batch)
+            epoch_loss += loss
+            n_batches += 1
+            
+            # 5. Backward pass on this batch only
+            grad = self.loss_fn.backward(y_pred, y_batch)
+            self.backward(grad)
+            
+            # 6. Update weights — one step per batch
+            self.optimizer.step(self.layers)`;
 
 const MINIBATCH_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   {
     id: 'shuffle-step',
-    lines: [9, 12],
+    lines: [6, 8],
     title: 'Per-epoch shuffling',
     equation: '\\pi \\sim \\text{Permutation}(N)',
     explanation: (
       <span>
-        Shuffling the dataset before each pass prevents repeated cyclical batch updates.
+        Shuffles training samples before each epoch so batches differ every time.
       </span>
     ),
   },
   {
     id: 'slice-step',
-    lines: [15, 18],
+    lines: [14, 17],
     title: 'Mini-batch partitioning',
     equation: 'B = X[i : i + \\text{batch\\_size}]',
     explanation: (
       <span>
-        Groups samples into compact matrices for efficient parallel vector operations.
+        Slices shuffled features and labels into compact batch matrices.
+      </span>
+    ),
+  },
+  {
+    id: 'step-update',
+    lines: [28, 32],
+    title: 'Backward pass and optimizer step',
+    equation: 'w \\leftarrow w - \\eta \\nabla_w L',
+    explanation: (
+      <span>
+        Computes loss gradients on the batch and updates layer weights with the optimizer.
       </span>
     ),
   },
@@ -151,13 +170,13 @@ export function MiniBatchSgdSection(): JSX.Element {
       <Reveal direction="up" delay={0.05}>
         <SubHeading id="mini-batch-sgd--python-code">4. Code Implementation in Python</SubHeading>
         <P>
-          Here is how <InlineCode>trainer.py</InlineCode> loops over mini-batches:
+          Here is how <InlineCode>model.py</InlineCode> loops over mini-batches:
         </P>
 
         <CodeBlock
           code={MINIBATCH_PYTHON_CODE}
           lang="python"
-          title="trainer.py · Mini-batch Loop"
+          title="model.py · Sequential.fit"
           annotations={MINIBATCH_CODE_ANNOTATIONS}
         />
       </Reveal>

@@ -13,53 +13,39 @@ import { Reveal } from '@/components/ui/Reveal';
 import { Term } from '@/components/ui/Term';
 import { WeightInitPlot } from './weight-initialization/WeightInitPlot';
 
-const INITIALIZATION_PYTHON_CODE = `# Weight initialization in initializers.py
-import numpy as np
-
-def initialize_weights(input_dim, output_dim, method='xavier'):
-    """
-    Initializes weights and biases for a dense layer.
-    """
-    if method == 'zeros':
-        # Failure case: breaks symmetry
-        W = np.zeros((input_dim, output_dim))
-    elif method == 'small':
-        # Naive small: signals vanish in deep networks
-        W = np.random.randn(input_dim, output_dim) * 0.01
-    elif method == 'xavier':
-        # Xavier / Glorot: optimal for tanh
-        std = np.sqrt(2.0 / (input_dim + output_dim))
-        W = np.random.randn(input_dim, output_dim) * std
-    elif method == 'he':
-        # He / Kaiming: optimal for ReLU
-        std = np.sqrt(2.0 / input_dim)
-        W = np.random.randn(input_dim, output_dim) * std
-    else:
-        raise ValueError(f"Unknown method: {method}")
-        
-    b = np.zeros(output_dim)
-    return W, b`;
+const INITIALIZATION_PYTHON_CODE = `# Lazy He initialization in layers.py
+if self.W is None:
+    # Number of columns = number of input features
+    n_in = X.shape[1]
+    
+    # Initialize weights using He initialization
+    self.W = np.random.randn(n_in, self.units) * np.sqrt(2 / n_in)
+    
+    # Initialize biases to zero
+    self.b = np.zeros((1, self.units))`;
 
 const INIT_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   {
-    id: 'xavier-formula',
-    lines: [14, 17],
-    title: 'Xavier scaling',
-    equation: '\\sigma = \\sqrt{\\frac{2}{n_{\\text{in}} + n_{\\text{out}}}}',
+    id: 'he-formula',
+    lines: [6, 7],
+    title: 'He weight scaling',
+    equation: '\\sigma = \\sqrt{\\frac{2}{n_{\\text{in}}}}',
     explanation: (
       <span>
-        Matches the input and output neuron counts to keep signal variance steady.
+        Multiplies random normal draws by <MathEquation math="\sqrt{2 / n_{\text{in}}}" />.
+        This keeps signals steady for ReLU.
       </span>
     ),
   },
   {
-    id: 'he-formula',
-    lines: [18, 21],
-    title: 'He scaling',
-    equation: '\\sigma = \\sqrt{\\frac{2}{n_{\\text{in}}}}',
+    id: 'bias-init',
+    lines: [9, 10],
+    title: 'Zero bias initialization',
+    equation: 'b = \\mathbf{0}',
     explanation: (
       <span>
-        Accounts for ReLU setting negative signals to zero by doubling variance.
+        Sets biases to zero with shape <InlineCode>(1, units)</InlineCode>.
+        Weights break symmetry, so biases can start at zero.
       </span>
     ),
   },
@@ -154,13 +140,13 @@ export function WeightInitializationSection(): JSX.Element {
       <Reveal direction="up" delay={0.05}>
         <SubHeading id="weight-initialization--python-code">4. Code Implementation in Python</SubHeading>
         <P>
-          Here is how <InlineCode>initializers.py</InlineCode> sets up weights:
+          Here is how <InlineCode>layers.py</InlineCode> sets up weights with He initialization. The playground shows the other methods.
         </P>
 
         <CodeBlock
           code={INITIALIZATION_PYTHON_CODE}
           lang="python"
-          title="initializers.py · Weight Initialization"
+          title="layers.py · He Initialization"
           annotations={INIT_CODE_ANNOTATIONS}
         />
       </Reveal>

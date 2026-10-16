@@ -175,13 +175,13 @@ export function NeuronSection(): JSX.Element {
       <Reveal direction="up" delay={0.05}>
         <SubHeading id="the-neuron--python-code">3. Neuron Code Implementation</SubHeading>
         <P>
-          In Python, you compute a neuron in two straightforward lines:
+          In Python, you compute a single neuron conceptually in two straightforward lines:
         </P>
 
         <CodeBlock
           code={NEURON_PYTHON_CODE}
           lang="python"
-          title="neuron.py · Forward Step"
+          title="Illustrative Example · Single Neuron Forward Step"
           annotations={NEURON_CODE_ANNOTATIONS}
         />
       </Reveal>

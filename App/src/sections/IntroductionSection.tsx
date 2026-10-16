@@ -21,7 +21,6 @@ import { Slider } from '@/components/ui/Slider';
 import { PlaybackControls } from '@/components/ui/PlaybackControls';
 import { Stat } from '@/components/ui/Stat';
 import { SegmentedControl } from '@/components/ui/SegmentedControl';
-import { Toggle } from '@/components/ui/Toggle';
 import { ControlsGrid } from '@/components/ui/ControlsGrid';
 import { Term } from '@/components/ui/Term';
 import { usePlayback } from '@/hooks/usePlayback';
@@ -33,7 +32,7 @@ const SAMPLE_PYTHON_CODE = `# Multiply inputs by weights and add bias
 def forward(self, X):
     self.X = X
     # Z = X · W + b
-    self.Z = np.dot(X, self.weights) + self.bias
+    self.Z = np.dot(X, self.W) + self.b
     return self.Z`;
 
 const AFFINE_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
@@ -146,21 +145,21 @@ const AFFINE_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
 export function IntroductionSection(): JSX.Element {
   // Interactive figure demonstration state
   const [learningRate, setLearningRate] = useState<number>(0.05);
-  const [optimizer, setOptimizer] = useState<'SGD' | 'Momentum' | 'Adam'>('SGD');
-  const [clipGradients, setClipGradients] = useState<boolean>(true);
+  const [optimizer, setOptimizer] = useState<'SGD' | 'Momentum'>('SGD');
 
   const playback = usePlayback({ initialSpeed: 2, maxTicks: 100 });
   const { ref: containerRef, width: containerWidth } = useElementSize<HTMLDivElement>();
 
   // Derived demonstration metric
+  const optimizerFactor = optimizer === 'Momentum' ? 1.4 : 1.0;
   const simulatedLoss = Math.max(
     0.012,
-    0.693 * Math.exp(-playback.tickCount * learningRate * 0.4)
+    0.693 * Math.exp(-playback.tickCount * learningRate * 0.4 * optimizerFactor)
   ).toFixed(4);
 
   const simulatedAccuracy = Math.min(
     99.2,
-    50 + playback.tickCount * learningRate * 25
+    50 + playback.tickCount * learningRate * 25 * optimizerFactor
   ).toFixed(1);
 
   return (
@@ -247,13 +246,17 @@ export function IntroductionSection(): JSX.Element {
           </Li>
         </Ul>
 
+        <Callout variant="note" title="Optional">
+          The project's Python code does not include this. It is good to understand, but you do not need it to follow the rest.
+        </Callout>
+
         {/* Live Interactive Figure Demonstrating All Tooling Primitives */}
         <Figure
-          caption="Interactive Control Deck: Test how sliders, buttons, and status cards work together."
+          caption="Interactive Control Deck: Test how learning rate, optimizer, and playback controls interact. This demo is a simple simulation, not real training, and Momentum is not part of this project's code."
           tryThis={[
             'Click Play to start the training run.',
             'Move the Learning Rate slider to change how fast the model learns.',
-            'Switch between SGD, Momentum, and Adam to compare optimizers.',
+            'Switch between SGD and Momentum to see how momentum accelerates learning in this simulation.',
             'Click Step to run one update at a time.',
           ]}
         >
@@ -261,20 +264,15 @@ export function IntroductionSection(): JSX.Element {
             {/* Top Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-3">
               <SegmentedControl
-                options={['SGD', 'Momentum', 'Adam']}
+                options={['SGD', 'Momentum']}
                 value={optimizer}
                 onChange={setOptimizer}
                 size="sm"
               />
-              <Toggle
-                label="Clip Gradients"
-                checked={clipGradients}
-                onChange={setClipGradients}
-              />
             </div>
 
             {/* Parameter Sliders in ControlsGrid */}
-            <ControlsGrid columns={2}>
+            <ControlsGrid columns={1}>
               <Slider
                 label="Learning Rate (α)"
                 min={0.01}
@@ -282,15 +280,6 @@ export function IntroductionSection(): JSX.Element {
                 step={0.01}
                 value={learningRate}
                 onChange={setLearningRate}
-              />
-              <Slider
-                label="Batch Size"
-                min={4}
-                max={64}
-                step={4}
-                value={16}
-                onChange={() => {}}
-                disabled
               />
             </ControlsGrid>
 
@@ -344,7 +333,7 @@ export function IntroductionSection(): JSX.Element {
         />
 
         <Callout variant="note" title="Matrix Dimensions">
-          Look at the multiplication order in <InlineCode>np.dot(X, self.weights)</InlineCode>.
+          Look at the multiplication order in <InlineCode>np.dot(X, self.W)</InlineCode>.
           The input matrix <MathEquation math="X" /> has size <InlineCode>(N, 400)</InlineCode> for{' '}
           <MathEquation math="N" /> samples. The weight matrix has size <InlineCode>(400, 25)</InlineCode>.
           Multiplying them gives an output matrix <MathEquation math="Z" /> of size{' '}

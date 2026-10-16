@@ -13,7 +13,16 @@ class BinaryCrossEntropy:
         
         return avg_loss
     
-    # !----- backward to be implemented
+    def backward(self, y_pred, y_true):
+        # Clip predictions to prevent division by zero during saturation
+        p = np.clip(y_pred, 1e-15, 1.0 - 1e-15)
+        return ((p - y_true) / (p * (1.0 - p))) / y_true.shape[0]
+    
+
+class MeanSquaredError:
+    
+    def forward(self, y_pred, y_true):
+        return 0.5 * np.mean((y_pred - y_true)**2)
     
     def backward(self, y_pred, y_true):
         return (y_pred - y_true) / y_true.shape[0]

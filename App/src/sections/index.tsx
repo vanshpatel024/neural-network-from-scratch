@@ -237,7 +237,7 @@ export const SECTIONS: readonly SectionItem[] = [
       { id: 'gradient-checking--finite-diff', title: '1. Finite Difference' },
       { id: 'gradient-checking--check-tool', title: '2. Check Tool' },
       { id: 'gradient-checking--error-score', title: '3. Error Score' },
-      { id: 'gradient-checking--python-code', title: '4. Python Code' },
+      { id: 'gradient-checking--code', title: '4. TypeScript Code' },
     ],
   },
   {

@@ -12,57 +12,147 @@ import {
 import { Reveal } from '@/components/ui/Reveal';
 import { GradCheckVisualizer } from './gradient-checking/GradCheckVisualizer';
 
-const GRADCHECK_PYTHON_CODE = `# Gradient checking in gradcheck.py
-import numpy as np
+const GRADCHECK_TS_CODE = `export function gradientCheck(
+  network: Sequential,
+  X: number[][],
+  y: number[][],
+  eps = 1e-5,
+  tolerance = 1e-6
+): GradCheckResult {
+  // 1. Compute analytical gradients via forward + backward
+  network.forward(X);
+  network.backward(y);
 
-def gradient_check(model, X, y, epsilon=1e-5, threshold=1e-7):
-    """
-    Checks calculus backprop slopes using centered finite steps.
-    """
-    # 1. Compute calculus slopes via backprop
-    model.forward(X)
-    model.backward(y)
-    
-    max_relative_error = 0.0
-    for layer in model.layers:
-        for index, weight_val in np.ndenumerate(layer.W):
-            analytical = layer.dW[index]
-            
-            # Finite difference: (L(w + eps) - L(w - eps)) / (2 * eps)
-            layer.W[index] = weight_val + epsilon
-            loss_plus = model.compute_loss(X, y)
-            
-            layer.W[index] = weight_val - epsilon
-            loss_minus = model.compute_loss(X, y)
-            
-            layer.W[index] = weight_val  # Restore
-            numerical = (loss_plus - loss_minus) / (2.0 * epsilon)
-            
-            # Relative error score
-            denom = max(abs(analytical), abs(numerical), 1e-8)
-            rel_error = abs(analytical - numerical) / denom
-            max_relative_error = max(max_relative_error, rel_error)
-            
-    passed = max_relative_error < threshold
-    return passed, max_relative_error`;
+  let maxRelativeError = 0;
+  let paramCount = 0;
+  const details: GradCheckResult['details'] = [];
+
+  // 2. Iterate through each layer and each parameter
+  for (let l = 0; l < network.layers.length; l++) {
+    const layer = network.layers[l]!;
+
+    // Check weights
+    for (let i = 0; i < layer.inputDim; i++) {
+      for (let j = 0; j < layer.outputDim; j++) {
+        paramCount++;
+        const originalVal = layer.weights[i]![j]!;
+        const analyticalGrad = layer.gradWeights[i]![j]!;
+
+        // Theta + eps
+        layer.weights[i]![j] = originalVal + eps;
+        const lossPlus = bceLoss(network.forward(X), y);
+
+        // Theta - eps
+        layer.weights[i]![j] = originalVal - eps;
+        const lossMinus = bceLoss(network.forward(X), y);
+
+        // Restore
+        layer.weights[i]![j] = originalVal;
+
+        const numericalGrad = (lossPlus - lossMinus) / (2 * eps);
+        const denominator = Math.max(
+          Math.abs(analyticalGrad),
+          Math.abs(numericalGrad),
+          1e-8
+        );
+        const relativeError =
+          Math.abs(analyticalGrad - numericalGrad) / denominator;
+
+        if (relativeError > maxRelativeError) {
+          maxRelativeError = relativeError;
+        }
+
+        details.push({
+          layerIndex: l,
+          paramType: 'weight',
+          coord: [i, j],
+          analytical: analyticalGrad,
+          numerical: numericalGrad,
+          relativeError,
+        });
+      }
+    }
+
+    // Check biases
+    for (let j = 0; j < layer.outputDim; j++) {
+      paramCount++;
+      const originalVal = layer.biases[j]!;
+      const analyticalGrad = layer.gradBiases[j]!;
+
+      // Theta + eps
+      layer.biases[j] = originalVal + eps;
+      const lossPlus = bceLoss(network.forward(X), y);
+
+      // Theta - eps
+      layer.biases[j] = originalVal - eps;
+      const lossMinus = bceLoss(network.forward(X), y);
+
+      // Restore
+      layer.biases[j] = originalVal;
+
+      const numericalGrad = (lossPlus - lossMinus) / (2 * eps);
+      const denominator = Math.max(
+        Math.abs(analyticalGrad),
+        Math.abs(numericalGrad),
+        1e-8
+      );
+      const relativeError =
+        Math.abs(analyticalGrad - numericalGrad) / denominator;
+
+      if (relativeError > maxRelativeError) {
+        maxRelativeError = relativeError;
+      }
+
+      details.push({
+        layerIndex: l,
+        paramType: 'bias',
+        coord: [j],
+        analytical: analyticalGrad,
+        numerical: numericalGrad,
+        relativeError,
+      });
+    }
+  }
+
+  // Restore network state by running a clean forward pass
+  network.forward(X);
+
+  return {
+    passed: maxRelativeError <= tolerance,
+    maxRelativeError,
+    paramCount,
+    details,
+  };
+}`;
 
 const GRADCHECK_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   {
+    id: 'analytical-pass',
+    lines: [8, 10],
+    title: 'Analytical backprop',
+    equation: '\\nabla_\\theta L',
+    explanation: (
+      <span>
+        Runs forward and backward passes to compute exact analytical gradients.
+      </span>
+    ),
+  },
+  {
     id: 'centered-diff',
-    lines: [18, 26],
+    lines: [27, 38],
     title: 'Centered difference step',
     equation: 'g_{\\text{num}} = \\frac{L(\\theta + \\epsilon) - L(\\theta - \\epsilon)}{2\\epsilon}',
     explanation: (
       <span>
-        Nudges one weight forward and backward to measure slope directly.
+        Nudges one weight forward and backward to estimate the slope directly.
       </span>
     ),
   },
   {
     id: 'relative-metric',
-    lines: [28, 31],
+    lines: [39, 45],
     title: 'Relative error score',
-    equation: '\\text{error} = \\frac{|g_{\\text{analytic}} - g_{\\text{num}}|}{\\max(|g_{\\text{analytic}}|, |g_{\\text{num}}|)}',
+    equation: '\\text{error} = \\frac{|g_{\\text{analytic}} - g_{\\text{num}}|}{\\max(|g_{\\text{analytic}}|, |g_{\\text{num}}|, 10^{-8})}',
     explanation: (
       <span>
         Scales by slope size so tiny values do not cause false alarms.
@@ -84,6 +174,14 @@ export function GradientCheckingSection(): JSX.Element {
           A tiny sign mistake can run without crashing while silently ruining your model.
           Gradient checking tests your code to prove your slope formulas work.
         </Lead>
+      </Reveal>
+
+      {/* Optional Note */}
+      <Reveal direction="up" delay={0.05}>
+        <Callout variant="note" title="Optional">
+          The project's Python code does not include this.
+          It is good to understand, but you do not need it to follow the rest.
+        </Callout>
       </Reveal>
 
       {/* 1. Numerical Approximation vs Analytical Gradients */}
@@ -158,17 +256,19 @@ export function GradientCheckingSection(): JSX.Element {
         </Callout>
       </Reveal>
 
-      {/* 5. Python Code Implementation */}
+      {/* 5. TypeScript Code Implementation */}
       <Reveal direction="up" delay={0.05}>
-        <SubHeading id="gradient-checking--python-code">4. Code Implementation in Python</SubHeading>
+        <SubHeading id="gradient-checking--code">4. Code Implementation in TypeScript</SubHeading>
         <P>
-          Here is how <InlineCode>gradcheck.py</InlineCode> loops over parameters:
+          The demo on this page runs this code.
+          The Python project does not include a gradient checker.
+          Here is how <InlineCode>gradcheck.ts</InlineCode> loops over parameters:
         </P>
 
         <CodeBlock
-          code={GRADCHECK_PYTHON_CODE}
-          lang="python"
-          title="gradcheck.py · Gradient Checking"
+          code={GRADCHECK_TS_CODE}
+          lang="typescript"
+          title="gradcheck.ts · The website's version"
           annotations={GRADCHECK_CODE_ANNOTATIONS}
         />
       </Reveal>
@@ -178,7 +278,7 @@ export function GradientCheckingSection(): JSX.Element {
         <Callout variant="takeaway" title="Key Takeaways">
           Always use two-sided steps rather than one-sided steps.
           Error below 1e-7 proves your backprop slopes are exact.
-          Run gradient checking as a test for new layers before training.
+          Use this check in testing before training big models.
         </Callout>
       </Reveal>
     </SectionWrapper>

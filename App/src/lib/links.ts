@@ -68,7 +68,7 @@ export const SECTION_REGISTRY_IDS = {
     'gradient-checking--finite-diff',
     'gradient-checking--check-tool',
     'gradient-checking--error-score',
-    'gradient-checking--python-code',
+    'gradient-checking--code',
   ],
   'train-your-own-model': [],
 } as const;

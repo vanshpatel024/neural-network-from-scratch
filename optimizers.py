@@ -5,7 +5,7 @@ class SGD:
     
     def step(self, layers):
         for layer in layers:
-            # We only update layers that have weights (Desnse layers)
+            # We only update layers that have weights (Dense layers)
             if hasattr(layer, 'W'):
                 layer.W = layer.W - (self.learning_rate * layer.dW)
                 layer.b = layer.b - (self.learning_rate * layer.db)

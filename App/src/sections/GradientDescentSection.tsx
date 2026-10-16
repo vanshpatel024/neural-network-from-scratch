@@ -571,11 +571,15 @@ export function GradientDescentSection(): JSX.Element {
         <P>
           Here, the vertical axis <MathEquation math="w_2" /> curves 10 times steeper than <MathEquation math="w_1" />.
           With plain gradient descent and a high learning rate, updates bounce wildly from wall to wall.
-          Turn on <strong className="text-accent">Momentum</strong> to see how velocity smooths out oscillations:
+          Turn on <strong className="text-accent">Momentum</strong> to see how velocity smooths out oscillations in simulation:
         </P>
 
+        <Callout variant="note" title="Optional">
+          The project's Python code does not include this. It is good to understand, but you do not need it to follow the rest.
+        </Callout>
+
         <Figure
-          caption="2D Contour Map: Visualizing the ravine zig-zag effect and momentum damping."
+          caption="2D Contour Map: Visualizing the ravine zig-zag effect and momentum damping in simulation."
           tryThis={[
             'Select High LR to see plain gradient descent bounce violently across the steep walls.',
             'Switch on Momentum to see velocity build along the valley floor while damping bounces.',
@@ -629,8 +633,7 @@ export function GradientDescentSection(): JSX.Element {
         <Callout variant="takeaway" title="Key Takeaways">
           Gradient descent turns calculus derivatives into parameter updates.
           The learning rate controls whether you crawl, converge, oscillate, or diverge.
-          In ravines and noisy batches, momentum accelerates progress along flat dimensions
-          while damping cross-valley bounces.
+          In 2D simulations, momentum shows how velocity can smooth valley oscillations.
         </Callout>
       </Reveal>
     </SectionWrapper>

@@ -53,7 +53,7 @@ export function HomePage(): JSX.Element {
           </h1>
 
           <p className="max-w-[70ch] text-lead text-text-secondary leading-relaxed">
-            A neural network built from scratch with NumPy. It runs in your browser and tells 0 from 1.
+            A neural network built from scratch and trained with NumPy. The same math runs in your browser and tells 0 from 1.
           </p>
         </header>
 

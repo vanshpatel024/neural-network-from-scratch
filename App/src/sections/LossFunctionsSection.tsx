@@ -15,16 +15,24 @@ import { Term } from '@/components/ui/Term';
 import { BceVsMsePlot } from './loss-functions/BceVsMsePlot';
 import { DatasetLossPlot } from './loss-functions/DatasetLossPlot';
 
-const BCE_PYTHON_CODE = `# Binary Cross-Entropy loss in loss.py
+const BCE_PYTHON_CODE = `# Binary Cross-Entropy and Mean Squared Error in loss.py
 class BinaryCrossEntropy:
     def forward(self, y_pred, y_true):
-        # Clip values to prevent log(0) errors
-        y_pred = np.clip(y_pred, 1e-15, 1.0 - 1e-15)
-        loss = -(y_true * np.log(y_pred) + (1.0 - y_true) * np.log(1.0 - y_pred))
+        # Prevent math errors by clipping values slightly away from 0 and 1
+        y_pred = np.clip(y_pred, 1e-15, 1 - 1e-15)
+        loss = -(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
         return np.mean(loss)
         
     def backward(self, y_pred, y_true):
-        # Combined derivative simplifies directly
+        # Clip predictions to prevent division by zero during saturation
+        p = np.clip(y_pred, 1e-15, 1.0 - 1e-15)
+        return ((p - y_true) / (p * (1.0 - p))) / y_true.shape[0]
+
+class MeanSquaredError:
+    def forward(self, y_pred, y_true):
+        return 0.5 * np.mean((y_pred - y_true)**2)
+        
+    def backward(self, y_pred, y_true):
         return (y_pred - y_true) / y_true.shape[0]`;
 
 const BCE_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
@@ -53,13 +61,35 @@ const BCE_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   },
   {
     id: 'bce-backward',
-    lines: [10, 11],
-    title: 'Output gradient calculation',
-    equation: '\\frac{\\partial L}{\\partial z} = \\frac{\\hat{y} - y}{N}',
+    lines: [10, 12],
+    title: 'Loss gradient with respect to prediction',
+    equation: '\\frac{\\partial L}{\\partial p} = \\frac{1}{N} \\frac{p - y}{p (1 - p)}',
     explanation: (
       <span>
-        The sigmoid derivative and BCE derivative cancel out cleanly.
-        This leaves the raw prediction error scaled by batch size.
+        Computes the gradient with respect to prediction <MathEquation math="p" />.
+        The sigmoid layer multiplies it by <MathEquation math="p(1 - p)" />, leaving <MathEquation math="(p - y) / N" />.
+      </span>
+    ),
+  },
+  {
+    id: 'mse-forward',
+    lines: [15, 16],
+    title: 'MSE evaluation',
+    equation: 'L = \\frac{1}{2N} \\sum (p - y)^2',
+    explanation: (
+      <span>
+        Computes half the mean squared difference between predictions and true labels.
+      </span>
+    ),
+  },
+  {
+    id: 'mse-backward',
+    lines: [18, 19],
+    title: 'MSE gradient calculation',
+    equation: '\\frac{\\partial L}{\\partial p} = \\frac{p - y}{N}',
+    explanation: (
+      <span>
+        Computes the prediction error divided by batch size.
       </span>
     ),
   },
@@ -153,17 +183,35 @@ export function LossFunctionsSection(): JSX.Element {
         </Figure>
       </Reveal>
 
-      {/* 5. The Elegant Gradient Cancellation Callout */}
+      {/* 5. The Derivative Cancellation Callout */}
       <Reveal direction="up" delay={0.05}>
         <Callout variant="note" title="The Derivative Cancellation">
-          When you combine a Sigmoid output with BCE loss, calculus reveals a clean simplification:
+          <P>
+            Our code keeps the loss and the layers separate.
+            The loss returns the gradient with respect to prediction <MathEquation math="p" />:
+          </P>
           <MathEquation
-            math="\frac{\partial L}{\partial z} = \frac{\partial L}{\partial p} \cdot \frac{\partial p}{\partial z} = \frac{p - y}{p(1 - p)} \cdot p(1 - p) = p - y"
+            math="\frac{\partial L}{\partial p} = \frac{1}{N} \frac{p - y}{p(1 - p)}"
+            block
+            label="Loss Gradient"
+          />
+          <P>
+            Next, the Dense layer calls the Sigmoid backward step.
+            Sigmoid multiplies this incoming gradient by its local derivative <MathEquation math="p(1 - p)" />:
+          </P>
+          <MathEquation
+            math="\frac{\partial L}{\partial z} = \frac{\partial L}{\partial p} \cdot \frac{\partial p}{\partial z} = \frac{p - y}{p(1 - p) N} \cdot p(1 - p) = \frac{p - y}{N}"
             block
             label="Sigmoid and BCE Derivative Cancellation"
           />
-          The denominator <MathEquation math="p(1 - p)" /> cancels out completely.
-          The error signal entering backpropagation is simply the raw difference: <InlineCode>p - y</InlineCode>.
+          <P>
+            The factor <MathEquation math="p(1 - p)" /> in the denominator cancels out completely.
+            This leaves the clean result: <MathEquation math="(p - y) / N" />.
+          </P>
+          <P>
+            The loss and the sigmoid layer both keep the output away from exactly 0 and 1 (by 0.000000000000001, written <InlineCode>1e-15</InlineCode>).
+            They use the same limit, so the two steps still cancel to <MathEquation math="(p - y) / N" />, even when the network is very sure and wrong.
+          </P>
         </Callout>
       </Reveal>
 
@@ -171,13 +219,13 @@ export function LossFunctionsSection(): JSX.Element {
       <Reveal direction="up" delay={0.05}>
         <SubHeading id="loss-functions--python-code">4. Code Implementation in Python</SubHeading>
         <P>
-          Here is how <InlineCode>loss.py</InlineCode> computes the forward penalty and backward gradient:
+          Here is how <InlineCode>loss.py</InlineCode> computes forward penalties and backward gradients:
         </P>
 
         <CodeBlock
           code={BCE_PYTHON_CODE}
           lang="python"
-          title="loss.py · BinaryCrossEntropy"
+          title="loss.py · BinaryCrossEntropy and MeanSquaredError"
           annotations={BCE_CODE_ANNOTATIONS}
         />
       </Reveal>
@@ -186,7 +234,8 @@ export function LossFunctionsSection(): JSX.Element {
       <Reveal direction="up" delay={0.05}>
         <Callout variant="takeaway" title="Key Takeaways">
           BCE penalizes confident wrong guesses much harder than MSE.
-          Combining Sigmoid outputs with BCE cancels out non-linear denominators, leaving a clean error signal.
+          The loss returns the gradient for prediction p.
+          The sigmoid layer multiplies it by p(1 - p), cancelling the denominator into (p - y) / N.
         </Callout>
       </Reveal>
     </SectionWrapper>

@@ -21,39 +21,39 @@ import { DIGIT_0_SAMPLE, DIGIT_1_SAMPLE } from '@/lib/digitSamples';
 
 const BACKPROP_PYTHON_CODE = `# Backward pass for Dense layer in layers.py
 class Dense:
-    def backward(self, dZ):
-        # Backpropagate through activation if attached
+    def backward(self, grad):
+        # 1. Backprop through activation if present
         if self.activation is not None:
-            dZ = self.activation.backward(dZ)
-            
-        # Parameter gradients
-        self.dW = np.dot(self.X.T, dZ)
-        self.db = np.sum(dZ, axis=0, keepdims=True)
+            grad = self.activation.backward(grad)
         
-        # Pass input gradient backward to preceding layer
-        return np.dot(dZ, self.W.T)`;
+        # 2. Compute gradients for parameters
+        self.dW = np.dot(self.X.T, grad)
+        self.db = np.sum(grad, axis=0, keepdims=True)
+        
+        # 3. Return gradient with respect to inputs to pass to previous layer
+        return np.dot(grad, self.W.T)`;
 
 const BACKPROP_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   {
     id: 'act-backprop',
-    lines: [4, 6],
+    lines: [5, 6],
     title: 'Activation backpropagation',
-    equation: 'dZ = \\frac{\\partial L}{\\partial A} \\odot g\'(Z)',
+    equation: '\\text{grad} = \\frac{\\partial L}{\\partial A} \\odot g\'(Z)',
     explanation: (
       <span>
-        Multiplies the incoming gradient by the local activation slope.
+        Multiplies incoming gradient by the local activation slope.
         For ReLU, it passes positive gradients and blocks negative ones.
       </span>
     ),
   },
   {
     id: 'dw-gradient',
-    lines: [8, 9],
+    lines: [9, 9],
     title: 'Weight gradient computation',
-    equation: '\\frac{\\partial L}{\\partial W} = X^T \\cdot dZ',
+    equation: '\\frac{\\partial L}{\\partial W} = X^T \\cdot \\text{grad}',
     explanation: (
       <span>
-        Multiplies transposed cached input <InlineCode>self.X</InlineCode> by incoming error <InlineCode>dZ</InlineCode>.
+        Multiplies transposed cached input <InlineCode>self.X</InlineCode> by incoming gradient <InlineCode>grad</InlineCode>.
         This assigns blame to each weight in proportion to its input signal.
       </span>
     ),
@@ -62,7 +62,7 @@ const BACKPROP_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
     id: 'db-gradient',
     lines: [10, 10],
     title: 'Bias gradient computation',
-    equation: '\\frac{\\partial L}{\\partial b} = \\sum_{i=1}^m dZ_i',
+    equation: '\\frac{\\partial L}{\\partial b} = \\sum_{i=1}^m \\text{grad}_i',
     explanation: (
       <span>
         Sums errors down the batch rows because the same bias is added to every sample.
@@ -71,9 +71,9 @@ const BACKPROP_CODE_ANNOTATIONS: readonly CodeAnnotation[] = [
   },
   {
     id: 'dx-gradient',
-    lines: [12, 13],
+    lines: [13, 13],
     title: 'Input gradient propagation',
-    equation: '\\frac{\\partial L}{\\partial X} = dZ \\cdot W^T',
+    equation: '\\frac{\\partial L}{\\partial X} = \\text{grad} \\cdot W^T',
     explanation: (
       <span>
         Returns the error signal with respect to input <InlineCode>X</InlineCode>.
@@ -157,8 +157,10 @@ export function BackpropagationSection(): JSX.Element {
         />
 
         <P>
-          The sigmoid slope cancels out the loss denominator.
-          The error residual <MathEquation math="\hat{y} - y" /> scales directly by pixel <MathEquation math="x" />.
+          The loss returns the gradient with respect to prediction <MathEquation math="\hat{y}" />.
+          The sigmoid layer multiplies it by <MathEquation math="\hat{y}(1 - \hat{y})" />.
+          The factor cancels out, leaving <MathEquation math="(\hat{y} - y) / N" /> for a batch of <MathEquation math="N" /> items.
+          The error residual scales directly by pixel <MathEquation math="x" />.
         </P>
       </Reveal>
 
@@ -242,8 +244,9 @@ export function BackpropagationSection(): JSX.Element {
         </ul>
 
         <P>
-          In Python with NumPy, the computer updates all 400 weights in one line of code:
-          <InlineCode>dW = (y_hat - y) * X</InlineCode>.
+          For a single image, the formula is <InlineCode>dW = (y_hat - y) * x</InlineCode>.
+          The loss returns the prediction gradient, and Sigmoid multiplies by <InlineCode>p(1 - p)</InlineCode>.
+          This leaves <InlineCode>(p - y) / N</InlineCode>, and the layer handles the batch with <InlineCode>np.dot(X.T, grad)</InlineCode>.
         </P>
 
         <Callout variant="intuition" title="Why We Isolate One Pixel Below">

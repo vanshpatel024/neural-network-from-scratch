@@ -8,17 +8,18 @@ An interactive, visual textbook that teaches deep learning from first principles
 
 1. **Foundations**:
    - **The Neuron**: Biological inspiration, linear combination ($z = \mathbf{w} \cdot \mathbf{x} + b$), and live 2D decision boundary visualization.
-   - **Activation Functions**: Step, Sigmoid, tanh, ReLU, and Leaky ReLU with derivatives and vanishing gradient demonstrations.
+   - **Activation Functions**: Sigmoid, Tanh, ReLU, and Leaky ReLU with derivatives and vanishing gradient demonstrations.
    - **Forward Propagation**: Matrix multiplication, multi-layer transformations, and dimensional shape tracing.
 2. **Learning**:
    - **Loss Functions**: Binary Cross-Entropy (BCE) vs. Mean Squared Error (MSE), confident error penalties, and derivative cancellation.
-   - **Gradient Descent**: Step-by-step calculus, learning rates, momentum, and 2D loss contours.
+   - **Gradient Descent**: Step-by-step calculus, learning rates, 2D loss contours, and visual momentum simulation.
    - **Backpropagation**: The multivariate chain rule, step-by-step computational graph, and layer error signals ($dZ$).
 3. **Training**:
    - **Weight Initialization**: Zero symmetry failure, vanishing/exploding signals, Xavier (Glorot), and He (Kaiming) distributions.
    - **Mini-batch SGD**: Stochastic vs. Mini-batch vs. Full Batch descent paths on 2D loss contours with noise scaling.
-   - **Gradient Checking**: Validating analytical backprop against centered finite differences ($O(\epsilon^2)$) with deliberate bug injection testing.
+   - **Gradient Checking**: An interactive demo and docs topic validating analytical backprop against centered finite differences ($O(\epsilon^2)$) with deliberate bug injection testing (optional topic not in the Python project).
 4. **Interactive Playground**:
+   - Real-time training with ReLU, Sigmoid, Tanh, and Linear on synthetic datasets (Moons, Circles, XOR, Blobs, Spirals). Leaky ReLU appears in the Activation Functions chapter curve tool only.
    - Live Web Worker training loop (runs off the main thread at 60 FPS).
    - Real-time decision boundary canvas with click-to-add custom points.
    - Loss and accuracy curves.
@@ -111,6 +112,15 @@ App/
 ├── public/                    # Favicon and static assets
 └── vercel.json                # Vercel deployment SPA configuration
 ```
+
+---
+
+## Deployment
+
+The website deploys to Vercel as a single-page app. URL rewrites ensure `/docs` works on direct visits and refreshes.
+
+- **Deploy from repository root**: Vercel reads root `vercel.json`. It runs `cd App && npm install` and builds output to `App/dist`.
+- **Deploy with Root Directory set to `App`**: In your Vercel Project Settings, set **Root Directory** to `App`. Vercel will use `App/vercel.json` directly.
 
 ---
 
