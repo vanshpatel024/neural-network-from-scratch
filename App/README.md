@@ -2,6 +2,8 @@
 
 An interactive, visual textbook that teaches deep learning from first principles. Built with pure mathematics, clean TypeScript and Python reference implementations, and zero machine learning library dependencies.
 
+Live Application: [https://neural-network-from-scratch-eight.vercel.app](https://neural-network-from-scratch-eight.vercel.app)
+
 ---
 
 ## What This Interactive Guide Includes
@@ -53,16 +55,18 @@ Visit `http://localhost:5173` in your browser.
 
 ---
 
-## Available Scripts
+## Built-in Commands
+
+You can run these commands inside the `App/` directory to verify the application and check for errors:
 
 | Command | Purpose |
 | :--- | :--- |
-| `npm run dev` | Starts Vite dev server with hot module replacement (HMR) |
+| `npm run dev` | Starts Vite dev server with hot module replacement |
 | `npm test` | Runs the full Vitest unit test suite |
-| `npm run typecheck` | Type-checks all TypeScript files (`tsc --noEmit`) |
+| `npm run typecheck` | Type-checks all TypeScript files |
 | `npm run lint` | Lints files using ESLint |
-| `npm run check:language` | Audits text readability (Flesch-Kincaid Grade $\le 8.0$, 0 long sentences) |
-| `npm run test:e2e` | Runs Playwright end-to-end tests verifying single-click scrolling |
+| `npm run check:language` | Audits text readability and sentence clarity |
+| `npm run test:e2e` | Runs Playwright end-to-end tests |
 | `npm run build` | Builds the optimized production bundle (`dist/`) |
 | `npm run preview` | Previews the production build locally |
 
@@ -112,15 +116,6 @@ App/
 ├── public/                    # Favicon and static assets
 └── vercel.json                # Vercel deployment SPA configuration
 ```
-
----
-
-## Deployment
-
-The website deploys to Vercel as a single-page app. URL rewrites ensure `/docs` works on direct visits and refreshes.
-
-- **Deploy from repository root**: Vercel reads root `vercel.json`. It runs `cd App && npm install` and builds output to `App/dist`.
-- **Deploy with Root Directory set to `App`**: In your Vercel Project Settings, set **Root Directory** to `App`. Vercel will use `App/vercel.json` directly.
 
 ---
 

@@ -1,6 +1,8 @@
 # Neural Network From Scratch
 
-A deep learning project implementing neural networks from first principles using pure Python and NumPy, paired with a web visualizer and textbook.
+A deep learning project implementing neural networks from first principles using pure Python and NumPy, paired with an interactive visual textbook and playground.
+
+Live Application: [https://neural-network-from-scratch-eight.vercel.app](https://neural-network-from-scratch-eight.vercel.app)
 
 The goal is not to use a high-level framework like TensorFlow or PyTorch. Instead, every core component—matrix transformations, activations, losses, backpropagation, and mini-batch SGD—is built from scratch in Python.
 
@@ -15,6 +17,8 @@ The goal is not to use a high-level framework like TensorFlow or PyTorch. Instea
   - Optimizers: Mini-batch Stochastic Gradient Descent (SGD)
   - End-to-end training loop on the 20x20 handwritten digit dataset (`dataset/01dataset.csv`)
 - **Interactive Visual Textbook & Web Playground (`App/`)**:
+  - Live deployment at [neural-network-from-scratch-eight.vercel.app](https://neural-network-from-scratch-eight.vercel.app)
+  - Interactive digit classifier running trained model weights
   - 11 comprehensive visual chapters spanning Foundations, Learning, Training, and Live Playground
   - Interactive gradient checking demo and docs topic with finite difference validation and bug injection (the Python project does not include a gradient checker)
   - Interactive playground training on Moons, Circles, XOR, Blobs, and Spirals with ReLU, Sigmoid, Tanh, and Linear (Leaky ReLU appears in the Activation Functions chapter curve tool only)
@@ -45,7 +49,7 @@ python train.py
 
 ### 3. What It Does and Prints
 
-The script loads the 20×20 handwritten digit dataset from `dataset/01dataset.csv`. It builds a 3-layer neural network (Dense 25 with ReLU, Dense 15 with ReLU, Dense 1 with Sigmoid) and trains it using mini-batch SGD.
+The script loads the 20x20 handwritten digit dataset from `dataset/01dataset.csv`. It builds a 3-layer neural network (Dense 25 with ReLU, Dense 15 with ReLU, Dense 1 with Sigmoid) and trains it using mini-batch SGD.
 
 During training, `model.py` prints the average loss every 100 epochs:
 
@@ -64,54 +68,39 @@ Weights saved to model_weights.json
 
 Warning: Running `train.py` overwrites `model_weights.json` in the root folder with new weights.
 
-### 4. Copying Weights to the Web App
+### 4. Testing Your Trained Weights
 
-To load your trained weights into the web application, copy `model_weights.json` into `App/public/`:
+If you train the network with different parameters, you can test your weights directly in the web app:
 
-```bash
-# On Linux / macOS:
-cp model_weights.json App/public/model_weights.json
-
-# On Windows (PowerShell):
-Copy-Item model_weights.json App/public/model_weights.json
-```
+1. Open the live application at [neural-network-from-scratch-eight.vercel.app](https://neural-network-from-scratch-eight.vercel.app).
+2. Locate the **Use your own weights** panel under the digit canvas.
+3. Upload or drag and drop your saved `model_weights.json` file.
+4. The web app loads your custom weights and runs digit predictions in real time.
 
 ---
 
-## Running the Interactive Visualizer
+## About the Web Application (`App/`)
 
-The interactive guide lives in the `App/` directory:
+The `App/` directory contains the source code for the interactive visual textbook and playground. You can access the deployed application directly at [neural-network-from-scratch-eight.vercel.app](https://neural-network-from-scratch-eight.vercel.app).
 
-```bash
-cd App
-npm install
-npm run dev
-```
-
-Open `http://localhost:5173` to explore the interactive visual textbook.
-
-For full architecture details, deployment options (Vercel & GitHub Pages), and developer scripts, see the [App Documentation](App/README.md).
+It includes:
+- A browser-based neural network engine written in TypeScript
+- An interactive digit classifier that runs inference on trained weights
+- 11 interactive visual chapters explaining neural network theory from first principles
+- A real-time training playground powered by Web Workers
+- Interactive canvas figures, loss contours, and math formulas
 
 ---
 
-## Deployment
+## Built-in Commands
 
-The website deploys to Vercel as a single-page app. URL rewrites ensure `/docs` works on direct visits and refreshes.
-
-- **Deploy from repository root**: Vercel reads the root `vercel.json`. It runs `cd App && npm install` and builds output to `App/dist`.
-- **Deploy with Root Directory set to `App`**: In your Vercel Project Settings, set **Root Directory** to `App`. Vercel will use `App/vercel.json` directly.
-
----
-
-## Running the Quality Gates
-
-Inside the `App/` directory:
+You can run these commands inside the `App/` directory to verify the codebase and check for errors:
 
 ```bash
 npm test              # Run unit tests (Vitest)
-npm run typecheck     # Type-check TypeScript (tsc --noEmit)
-npm run lint          # Run ESLint
-npm run check:language# Audit reading grade level (Grade <= 8.0)
-npm run test:e2e      # Run Playwright navigation tests
-npm run build         # Build production bundle
+npm run typecheck     # Check TypeScript types
+npm run lint          # Check code style and lint rules
+npm run check:language# Audit reading grade level and clarity
+npm run test:e2e      # Run end-to-end browser tests
+npm run build         # Build the production bundle
 ```
